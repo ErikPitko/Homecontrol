@@ -4,4 +4,10 @@
     <string name="title_relays">Relays</string>
     <string name="title_settings">Settings</string>
 
+    <string name="dsc_mainPump">Pump</string>
+    <string name="relay_mainPump">Pump</string>
+
+    <string name="stat_conn">Connected</string>
+    <string name="stat_err">Error</string>
+    <string name="stat_disconn">Disconnected</string>
 </resources>
