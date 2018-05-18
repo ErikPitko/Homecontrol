@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private RelayFragment relayFragment;
     private SettingsFragment settingsFragment;
+    private String[] subscribeTopics = {"brno"};
+    private int[] subscribeQos = {0};
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -56,8 +58,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pushToast(String msg) {
-        Toast.makeText(getApplicationContext(), msg,
-                Toast.LENGTH_LONG).show();
+        runOnUiThread(() -> {
+            Toast.makeText(getApplicationContext(), msg,
+                    Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private void updateStatusMsg(HomeFragment frag, String msg) {
+        runOnUiThread(() -> {
+            frag.setStatusMsg(msg);
+        });
+    }
+
+    private synchronized void mqttConnect() {
+        try {
+            mqttClient = IMqtt.getInstance().getClient();
+            if (mqttClient.isConnected())
+                return;
+            mqttClient.connect().subscribe(() -> {
+                this.updateStatusMsg(homeFragment, getString(R.string.stat_conn));
+
+                mqttClient.subscribe(subscribeTopics, subscribeQos).subscribe(msg -> {
+                    Log.d("MQTT", new String(msg.getPayload()));
+                });
+                pushToast(getString(R.string.stat_conn));
+            }, e -> {
+                pushToast(getString(R.string.stat_err));
+                this.updateStatusMsg(homeFragment, getString(R.string.stat_err));
+            });
+
+        } catch (MqttException e) {
+            this.updateStatusMsg(homeFragment, getString(R.string.stat_err));
+            pushToast(e.getMessage());
+        }
+    }
+
+    private synchronized void mqttDisconnect() {
+        if (!mqttClient.isConnected())
+            return;
+        mqttClient.unsubscribe(subscribeTopics).subscribe(() -> {
+            Log.d("MQTT", "Unsubscribe successful");
+        }, e -> {
+            Log.d("MQTT", "Unsubscribe failed");
+        });
+        mqttClient.disconnect();
     }
 
     @Override
@@ -73,33 +117,23 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        try {
-            mqttClient = IMqtt.getInstance().getClient();
-            mqttClient.connect().subscribe(() -> {
-                homeFragment.setStatusMsg(getString(R.string.stat_conn));
+    }
 
-                mqttClient.subscribe("brno", 1).subscribe(msg -> {
-                    Log.d("MQTT", new String(msg.getPayload()));
-                }, e -> {
-                    Log.d("MQTT", e.getMessage());
-                });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mqttConnect();
+    }
 
-            }, e -> {
-                pushToast("Connection failed");
-                homeFragment.setStatusMsg(getString(R.string.stat_err));
-
-            });
-
-
-        } catch (MqttException e) {
-            homeFragment.setStatusMsg(getString(R.string.stat_err));
-            pushToast(e.getMessage());
-        }
-
+    @Override
+    protected void onPause() {
+        mqttDisconnect();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
+        mqttDisconnect();
         mqttClient.close();
         super.onDestroy();
     }
