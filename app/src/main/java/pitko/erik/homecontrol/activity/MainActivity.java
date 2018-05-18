@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_relays:
                     setFragment(relayFragment);
                     return true;
-                case R.id.navigation_settings:
-                    setFragment(settingsFragment);
-                    return true;
+//                case R.id.navigation_settings:
+//                    setFragment(settingsFragment);
+//                    return true;
             }
             return false;
         }
