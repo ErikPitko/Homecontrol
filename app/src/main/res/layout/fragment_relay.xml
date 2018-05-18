@@ -44,18 +44,17 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:id="@+id/lounge_lights"
                         android:layout_width="313dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="-2dp"
-                        android:layout_toStartOf="@+id/lounge_switch"
+                        android:layout_toStartOf="@+id/switch_pump"
                         android:gravity="center_vertical"
                         android:text="@string/dsc_mainPump"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
                     <Switch
-                        android:id="@+id/lounge_switch"
+                        android:id="@+id/switch_pump"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
@@ -75,7 +74,6 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:id="@+id/kitchen_lights"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toStartOf="@+id/kitchen_switch"
@@ -104,7 +102,6 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:id="@+id/bedroom_lights"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toStartOf="@+id/bedroom_switch"

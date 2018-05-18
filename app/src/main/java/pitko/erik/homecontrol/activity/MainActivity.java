@@ -73,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
     private synchronized void mqttConnect() {
         try {
             mqttClient = IMqtt.getInstance().getClient();
-            if (mqttClient.isConnected())
+            if (mqttClient.isConnected()) {
+                Log.d("MQTT", "Already connected");
                 return;
+            }
             mqttClient.connect().subscribe(() -> {
                 this.updateStatusMsg(homeFragment, getString(R.string.stat_conn));
 
@@ -101,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
         }, e -> {
             Log.d("MQTT", "Unsubscribe failed");
         });
-        mqttClient.disconnect();
+        mqttClient.disconnect().subscribe(() -> {
+            Log.d("MQTT", "Disconnect successful");
+        });
     }
 
     @Override
