@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -15,14 +16,14 @@ import pitko.erik.homecontrol.fragments.FragmentSingleRelay;
 
 import static android.widget.RelativeLayout.BELOW;
 
-public abstract class Relay implements OnCheckedChangeListener {
+public class Relay implements OnCheckedChangeListener {
     @SerializedName("Relay")
     private String relayName;
     @SerializedName("State")
     private boolean state;
 
-    private FragmentSingleRelay singleRelay;
-    private static int relayCount = 1;
+    private transient FragmentSingleRelay singleRelay;
+    private transient static int relayCount = 1;
 
     public Relay(String relayName) {
         this.relayName = relayName;
@@ -82,5 +83,11 @@ public abstract class Relay implements OnCheckedChangeListener {
 
     public void setState(boolean state) {
         this.state = state;
+        this.singleRelay.setSwitchChecked(state);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
     }
 }

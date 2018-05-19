@@ -65,16 +65,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateStatusMsg(HomeFragment frag, String msg) {
-        runOnUiThread(() -> {
-            frag.setStatusMsg(msg);
-        });
+        runOnUiThread(() -> frag.setStatusMsg(msg));
     }
 
     private synchronized void mqttConnect() {
         try {
             mqttClient = IMqtt.getInstance().getClient();
             if (mqttClient.isConnected()) {
-                Log.d("MQTT", "Already connected");
+                Log.w("MQTT", "Already connected");
                 return;
             }
             mqttClient.connect().subscribe(() -> {
@@ -84,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MQTT", new String(msg.getPayload()));
                 });
                 pushToast(getString(R.string.stat_conn));
+                relayFragment.subscribeRelays();
             }, e -> {
                 pushToast(getString(R.string.stat_err));
                 this.updateStatusMsg(homeFragment, getString(R.string.stat_err));
@@ -98,14 +97,9 @@ public class MainActivity extends AppCompatActivity {
     private synchronized void mqttDisconnect() {
         if (!mqttClient.isConnected())
             return;
-        mqttClient.unsubscribe(subscribeTopics).subscribe(() -> {
-            Log.d("MQTT", "Unsubscribe successful");
-        }, e -> {
-            Log.d("MQTT", "Unsubscribe failed");
-        });
-        mqttClient.disconnect().subscribe(() -> {
-            Log.d("MQTT", "Disconnect successful");
-        });
+        relayFragment.unsubscribeRelays();
+        mqttClient.unsubscribe(subscribeTopics).subscribe();
+        mqttClient.disconnect().subscribe(() -> Log.d("MQTT", "Disconnect successful"));
     }
 
     @Override

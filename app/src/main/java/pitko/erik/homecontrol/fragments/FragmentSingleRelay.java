@@ -35,6 +35,9 @@ public class FragmentSingleRelay extends Fragment {
 
     public void setSwitchChecked(boolean state) {
         this.switchState = state;
+        if (aSwitch != null) {
+            getActivity().runOnUiThread(() -> aSwitch.setChecked(state));
+        }
     }
 
     @Nullable
