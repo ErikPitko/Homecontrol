@@ -58,10 +58,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pushToast(String msg) {
-        runOnUiThread(() -> {
-            Toast.makeText(getApplicationContext(), msg,
-                    Toast.LENGTH_LONG).show();
-        });
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), msg,
+                Toast.LENGTH_LONG).show());
     }
 
     private void updateStatusMsg(HomeFragment frag, String msg) {

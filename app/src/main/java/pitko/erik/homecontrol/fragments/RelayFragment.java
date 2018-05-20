@@ -35,8 +35,7 @@ public class RelayFragment extends Fragment {
     public RelayFragment() {
         RelayFactory rf = new RelayFactory();
         relays.add(rf.getRelay("Pump"));
-        relays.add(rf.getRelay("Pump"));
-        relays.add(rf.getRelay("Pump"));
+        relays.add(rf.getRelay("Light"));
     }
 
     public void subscribeRelays() {

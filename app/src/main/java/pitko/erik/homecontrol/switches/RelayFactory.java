@@ -9,7 +9,7 @@ public class RelayFactory {
                 relay = new RPump(name);
                 break;
             default:
-                relay = null;
+                relay = new Relay(name);
         }
 
         return relay;

@@ -4,14 +4,24 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import net.eusashead.iot.mqtt.ObservableMqttClient;
+import net.eusashead.iot.mqtt.PublishMessage;
+
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.fragments.FragmentSingleRelay;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -53,6 +63,7 @@ public class Relay implements OnCheckedChangeListener {
         placeHolder.addView(fl);
 
         singleRelay = new FragmentSingleRelay();
+//        Must be defined in strings
         singleRelay.setText(getResourcebyId(context, this.relayName));
         FragmentTransaction transaction = instance.getChildFragmentManager().beginTransaction();
         transaction.replace(fl.getId(), singleRelay);
@@ -64,17 +75,8 @@ public class Relay implements OnCheckedChangeListener {
         return singleRelay;
     }
 
-    public Switch getaSwitch() {
-        return singleRelay.getaSwitch();
-    }
-
-
     public String getRelayName() {
         return relayName;
-    }
-
-    public void setRelayName(String relayName) {
-        this.relayName = relayName;
     }
 
     public boolean isState() {
@@ -83,11 +85,32 @@ public class Relay implements OnCheckedChangeListener {
 
     public void setState(boolean state) {
         this.state = state;
-        this.singleRelay.setSwitchChecked(state);
+        if (this.singleRelay != null)
+            this.singleRelay.setSwitchChecked(state);
+    }
+
+    private void publish() {
+        String msg;
+        try {
+            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+            List<Relay> list = new ArrayList<>();
+            list.add(this);
+            msg = new Gson().toJson(list);
+            PublishMessage message = PublishMessage.create(msg.getBytes(), 1, false);
+            mqttClient.publish("relay/set", message).subscribe();
+            Log.d("Trigger", msg);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+        if (b) {
+            this.setState(true);
+        } else {
+            this.setState(false);
+        }
+        this.publish();
     }
 }
