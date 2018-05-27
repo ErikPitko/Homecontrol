@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_home">Domov</string>
+    <string name="title_relays">Relatka</string>
+    <string name="title_settings">Nastavenia</string>
+
+    <string name="Darling">Vodaren</string>
+    <string name="Pump">Cerpadlo</string>
+    <string name="Light">Svetlo</string>
+    <string name="Fan">Ventilator</string>
+
+    <string name="stat_conn">Pripojene</string>
+    <string name="stat_err">Chyba</string>
+    <string name="stat_disconn">Odpojene</string>
+</resources>

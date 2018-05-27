@@ -29,6 +29,10 @@ public class FragmentSingleRelay extends Fragment {
         return aSwitch;
     }
 
+    public CompoundButton.OnCheckedChangeListener getListener() {
+        return listener;
+    }
+
     public void setSwitchListener(CompoundButton.OnCheckedChangeListener listener) {
         this.listener = listener;
     }
@@ -36,7 +40,9 @@ public class FragmentSingleRelay extends Fragment {
     public void setSwitchChecked(boolean state) {
         this.switchState = state;
         if (aSwitch != null) {
+            this.aSwitch.setOnCheckedChangeListener(null);
             getActivity().runOnUiThread(() -> aSwitch.setChecked(state));
+            this.aSwitch.setOnCheckedChangeListener(listener);
         }
     }
 

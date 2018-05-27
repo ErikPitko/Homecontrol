@@ -5,9 +5,9 @@ public class RelayFactory {
         Relay relay;
 
         switch (name) {
-            case "Pump":
-                relay = new RPump(name);
-                break;
+//            case "Pump":
+//                relay = new RPump(name);
+//                break;
             default:
                 relay = new Relay(name);
         }

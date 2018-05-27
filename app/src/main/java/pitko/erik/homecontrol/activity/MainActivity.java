@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private RelayFragment relayFragment;
     private SettingsFragment settingsFragment;
-    private String[] subscribeTopics = {"brno"};
+    private String[] subscribeTopics = {"sensor/#"};
     private int[] subscribeQos = {0};
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

@@ -4,8 +4,12 @@
     <string name="title_relays">Relays</string>
     <string name="title_settings">Settings</string>
 
+    <string name="Darling">Darling</string>
     <string name="Pump">Pump</string>
     <string name="Light">Light</string>
+    <string name="Fan">Fan</string>
+    <string name="Boiler">Boiler</string>
+    <string name="EVd">EVd</string>
 
     <string name="stat_conn">Connected</string>
     <string name="stat_err">Error</string>

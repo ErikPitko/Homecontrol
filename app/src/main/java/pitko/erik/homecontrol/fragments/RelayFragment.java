@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -34,8 +35,8 @@ public class RelayFragment extends Fragment {
 
     public RelayFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Pump"));
-        relays.add(rf.getRelay("Light"));
+        relays.add(rf.getRelay("Darling"));
+        relays.add(rf.getRelay("EVd"));
     }
 
     public void subscribeRelays() {
@@ -60,6 +61,8 @@ public class RelayFragment extends Fragment {
                     }
                 }
             });
+//            TODO switch cycle
+//            mqttClient.unsubscribe("relay").subscribe();
         } catch (MqttException e) {
             e.printStackTrace();
         }
