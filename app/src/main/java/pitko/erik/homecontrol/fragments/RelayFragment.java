@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -37,6 +36,8 @@ public class RelayFragment extends Fragment {
         RelayFactory rf = new RelayFactory();
         relays.add(rf.getRelay("Darling"));
         relays.add(rf.getRelay("EVd"));
+        relays.add(rf.getRelay("Pump"));
+        relays.add(rf.getRelay("Fan"));
     }
 
     public void subscribeRelays() {

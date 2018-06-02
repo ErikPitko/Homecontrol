@@ -3,6 +3,7 @@ package pitko.erik.homecontrol.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +40,10 @@ public class FragmentSingleRelay extends Fragment {
 
     public void setSwitchChecked(boolean state) {
         this.switchState = state;
-        if (aSwitch != null) {
+        final FragmentActivity act = getActivity();
+        if (aSwitch != null && act != null) {
             this.aSwitch.setOnCheckedChangeListener(null);
-            getActivity().runOnUiThread(() -> aSwitch.setChecked(state));
+            act.runOnUiThread(() -> aSwitch.setChecked(state));
             this.aSwitch.setOnCheckedChangeListener(listener);
         }
     }

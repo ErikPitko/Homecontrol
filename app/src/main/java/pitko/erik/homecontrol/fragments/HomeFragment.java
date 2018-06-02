@@ -4,6 +4,7 @@ package pitko.erik.homecontrol.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,11 @@ public class HomeFragment extends Fragment {
 
     public void setStatusMsg(String msg) {
         statText = msg;
-        TextView txtView = (TextView) getActivity().findViewById(R.id.connStatus);
-        txtView.setText(statText);
+        final FragmentActivity act = getActivity();
+        if (act != null){
+            TextView txtView = (TextView) act.findViewById(R.id.connStatus);
+            txtView.setText(statText);
+        }
     }
 
 
