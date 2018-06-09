@@ -2,7 +2,13 @@
 <resources>
     <string name="title_home">Domov</string>
     <string name="title_relays">Relatka</string>
+    <string name="title_sensors">Senzory</string>
     <string name="title_settings">Nastavenia</string>
+
+    <string name="rasp_temp">Rasp teplota</string>
+    <string name="rasp_hum">Rasp vlhkost</string>
+    <string name="rasp_dew_point">Rasp rosny bod</string>
+    <string name="depth">Hlbka</string>
 
     <string name="Darling">Vodaren</string>
     <string name="Pump">Cerpadlo</string>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import pitko.erik.homecontrol.R;
 
 public class FragmentSingleRelay extends Fragment {
     private String text;
-    private Switch aSwitch;
+    private SwitchCompat aSwitch;
     private boolean switchState;
     private TextView txtView;
     private CompoundButton.OnCheckedChangeListener listener;
@@ -26,7 +27,7 @@ public class FragmentSingleRelay extends Fragment {
             txtView.setText(text);
     }
 
-    public Switch getaSwitch() {
+    public SwitchCompat getaSwitch() {
         return aSwitch;
     }
 
@@ -54,7 +55,7 @@ public class FragmentSingleRelay extends Fragment {
         View view = inflater.inflate(R.layout.fragment_singlerelay,
                 container, false);
         txtView = (TextView) view.findViewById(R.id.textView);
-        aSwitch = (Switch) view.findViewById(R.id.switchR);
+        aSwitch = (SwitchCompat) view.findViewById(R.id.switchR);
         aSwitch.setChecked(switchState);
         aSwitch.setOnCheckedChangeListener(listener);
         setText(text);

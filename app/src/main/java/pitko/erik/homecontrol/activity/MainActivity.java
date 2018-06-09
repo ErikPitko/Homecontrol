@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateStatusMsg(HomeFragment frag, String msg) {
-        runOnUiThread(() -> frag.setStatusMsg(msg));
+//        runOnUiThread(() -> frag.setStatusMsg(msg));
     }
 
     private synchronized void mqttConnect() {
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MQTT", new String(msg.getPayload()));
                 });
                 pushToast(getString(R.string.stat_conn));
+                homeFragment.subscribeSensors();
                 relayFragment.subscribeRelays();
             }, e -> {
                 pushToast(getString(R.string.stat_err));

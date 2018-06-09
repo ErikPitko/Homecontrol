@@ -1,5 +1,6 @@
 package pitko.erik.homecontrol.switches;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleRelay;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -89,10 +92,20 @@ public class Relay implements OnCheckedChangeListener {
             this.singleRelay.setSwitchChecked(state);
     }
 
+    private void pushToast(String msg) {
+        Activity act = getSingleRelay().getActivity();
+        act.runOnUiThread(() -> Toast.makeText(act, msg,
+                Toast.LENGTH_LONG).show());
+    }
+
     private void publish() {
         String msg;
         try {
             ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+            if (!mqttClient.isConnected()){
+                pushToast("Client not connected");
+                return;
+            }
             List<Relay> list = new ArrayList<>();
             list.add(this);
             msg = new Gson().toJson(list);
