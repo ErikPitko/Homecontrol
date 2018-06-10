@@ -15,8 +15,8 @@
     <string name="Pump">Pump</string>
     <string name="Light">Light</string>
     <string name="Fan">Fan</string>
-    <string name="Boiler">Boiler</string>
     <string name="EVd">EVd</string>
+    <string name="Boiler">Boiler</string>
 
     <string name="stat_conn">Connected</string>
     <string name="stat_err">Error</string>

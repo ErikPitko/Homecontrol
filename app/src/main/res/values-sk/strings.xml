@@ -14,6 +14,7 @@
     <string name="Pump">Cerpadlo</string>
     <string name="Light">Svetlo</string>
     <string name="Fan">Ventilator</string>
+    <string name="EVd">Doplnanie</string>
 
     <string name="stat_conn">Pripojene</string>
     <string name="stat_err">Chyba</string>

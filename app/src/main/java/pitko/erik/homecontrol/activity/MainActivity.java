@@ -62,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show());
     }
 
-    private void updateStatusMsg(HomeFragment frag, String msg) {
-//        runOnUiThread(() -> frag.setStatusMsg(msg));
-    }
-
     private synchronized void mqttConnect() {
         try {
             mqttClient = IMqtt.getInstance().getClient();
@@ -74,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             mqttClient.connect().subscribe(() -> {
-                this.updateStatusMsg(homeFragment, getString(R.string.stat_conn));
-
                 mqttClient.subscribe(subscribeTopics, subscribeQos).subscribe(msg -> {
                     Log.d("MQTT", new String(msg.getPayload()));
                 });
@@ -84,11 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 relayFragment.subscribeRelays();
             }, e -> {
                 pushToast(getString(R.string.stat_err));
-                this.updateStatusMsg(homeFragment, getString(R.string.stat_err));
             });
 
         } catch (MqttException e) {
-            this.updateStatusMsg(homeFragment, getString(R.string.stat_err));
             pushToast(e.getMessage());
         }
     }

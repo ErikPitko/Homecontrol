@@ -23,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.exceptions.OnErrorNotImplementedException;
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleRelay;

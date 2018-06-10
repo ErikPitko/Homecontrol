@@ -19,13 +19,12 @@ public class IMqtt {
 
     private IMqtt() throws MqttException {
         MemoryPersistence dataStore = new MemoryPersistence();
-//        final IMqttAsyncClient paho = new MqttAsyncClient("ssl://kosec.ddns.net:8883", MqttAsyncClient.generateClientId(), dataStore);
         final IMqttAsyncClient paho = new MqttAsyncClient("tcp://192.168.42.1:1883", MqttAsyncClient.generateClientId(), dataStore);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
         connectOptions.setAutomaticReconnect(true);
-//        connectOptions.setUserName("kosec");
-//        connectOptions.setPassword("rangerkondor31".toCharArray());
+        connectOptions.setKeepAliveInterval(15);
+        connectOptions.setMaxInflight(40);
 
         client = PahoObservableMqttClient.builder(paho)
                 .setConnectOptions(connectOptions)
