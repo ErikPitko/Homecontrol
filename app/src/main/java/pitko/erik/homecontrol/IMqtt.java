@@ -22,6 +22,7 @@ public class IMqtt {
         final IMqttAsyncClient paho = new MqttAsyncClient("tcp://192.168.42.1:1883", MqttAsyncClient.generateClientId(), dataStore);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
+        connectOptions.setConnectionTimeout(3);
         connectOptions.setAutomaticReconnect(true);
         connectOptions.setKeepAliveInterval(15);
         connectOptions.setMaxInflight(40);

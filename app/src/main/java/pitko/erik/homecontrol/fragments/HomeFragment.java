@@ -53,12 +53,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         for (Sensor sensor:sensors){
-            sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.sensorLayout));
+            sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.sensorLayout), getActivity());
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.switches.Relay;
 import pitko.erik.homecontrol.switches.RelayFactory;
 
@@ -43,25 +44,27 @@ public class RelayFragment extends Fragment {
     public void subscribeRelays() {
         try {
             ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            mqttClient.subscribe("relay", 1).subscribe(msg -> {
-                List<Relay> relays;
-                JSONArray json = new JSONArray(new String(msg.getPayload()));
-                if (json.length() > 0) {
-                    Type collectionType = new TypeToken<List<Relay>>() {
-                    }.getType();
-                    relays = new Gson().fromJson(json.toString(), collectionType);
-                } else {
-                    return;
-                }
-                for (Relay inRelay : relays) {
-                    for (Relay relay : this.relays) {
-                        if (inRelay.getRelayName().compareTo(relay.getRelayName()) == 0) {
-                            relay.setState(inRelay.isState());
+            MainActivity.COMPOSITE_DISPOSABLE.add(
+                    mqttClient.subscribe("relay", 1).subscribe(msg -> {
+                        List<Relay> relays;
+                        JSONArray json = new JSONArray(new String(msg.getPayload()));
+                        if (json.length() > 0) {
+                            Type collectionType = new TypeToken<List<Relay>>() {
+                            }.getType();
+                            relays = new Gson().fromJson(json.toString(), collectionType);
+                        } else {
+                            return;
                         }
+                        for (Relay inRelay : relays) {
+                            for (Relay relay : this.relays) {
+                                if (inRelay.getRelayName().compareTo(relay.getRelayName()) == 0) {
+                                    relay.setState(inRelay.isState());
+                                }
 
-                    }
-                }
-            });
+                            }
+                        }
+                    })
+            );
 //            TODO switch cycle
 //            mqttClient.unsubscribe("relay").subscribe();
         } catch (MqttException e) {

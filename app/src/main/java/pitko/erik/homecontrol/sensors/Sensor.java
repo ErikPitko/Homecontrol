@@ -13,6 +13,7 @@ import net.eusashead.iot.mqtt.ObservableMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.SensorStatusFragment;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -43,8 +44,8 @@ public class Sensor {
         this.sensorStatus = msg;
         if (sensorFragment != null){
             Activity act;
-            while ((act = sensorFragment.getActivity()) == null);
-            act.runOnUiThread(()->sensorFragment.setStatus(msg));
+            if ((act = sensorFragment.getActivity()) != null)
+                act.runOnUiThread(() -> sensorFragment.setStatus(msg));
         }
     }
 
@@ -56,13 +57,15 @@ public class Sensor {
     public void subscribe(){
         try {
             ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            mqttClient.subscribe(topic, 0).subscribe(msg -> this.setSensorStatus(new String(msg.getPayload())));
+            MainActivity.COMPOSITE_DISPOSABLE.add(
+                    mqttClient.subscribe(topic, 0).subscribe(msg -> this.setSensorStatus(new String(msg.getPayload())))
+            );
         } catch (MqttException e) {
             e.printStackTrace();
         }
     }
 
-    public void drawSensor(Fragment instance, RelativeLayout placeHolder) {
+    public void drawSensor(Fragment instance, RelativeLayout placeHolder, Activity act) {
         Context context = instance.getContext();
 
         RelativeLayout fl = new RelativeLayout(context);
@@ -87,7 +90,7 @@ public class Sensor {
         transaction.commit();
         sensorFragment.setText(getResourcebyId(context, this.sensorText));
         sensorFragment.setPostfix(postfix);
-        sensorFragment.setStatus(sensorStatus);
+        act.runOnUiThread(() -> sensorFragment.setStatus(sensorStatus));
     }
 
 }

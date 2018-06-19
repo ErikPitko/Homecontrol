@@ -14,6 +14,7 @@ import net.eusashead.iot.mqtt.ObservableMqttClient;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import io.reactivex.disposables.CompositeDisposable;
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.fragments.HomeFragment;
@@ -21,6 +22,7 @@ import pitko.erik.homecontrol.fragments.RelayFragment;
 import pitko.erik.homecontrol.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
+    public static final CompositeDisposable COMPOSITE_DISPOSABLE = new CompositeDisposable();
     private ObservableMqttClient mqttClient;
 
     private BottomNavigationView navigation;
@@ -69,17 +71,18 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("MQTT", "Already connected");
                 return;
             }
-            mqttClient.connect().subscribe(() -> {
-                mqttClient.subscribe(subscribeTopics, subscribeQos).subscribe(msg -> {
-                    Log.d("MQTT", new String(msg.getPayload()));
-                });
-                pushToast(getString(R.string.stat_conn));
-                homeFragment.subscribeSensors();
-                relayFragment.subscribeRelays();
-            }, e -> {
-                pushToast(getString(R.string.stat_err));
-            });
-
+            COMPOSITE_DISPOSABLE.add(
+                    mqttClient.connect().subscribe(() -> {
+                        mqttClient.subscribe(subscribeTopics, subscribeQos).subscribe(msg -> {
+                            Log.d("MQTT", new String(msg.getPayload()));
+                        });
+                        pushToast(getString(R.string.stat_conn));
+                        homeFragment.subscribeSensors();
+                        relayFragment.subscribeRelays();
+                    }, e -> {
+                        pushToast(getString(R.string.stat_err));
+                    })
+            );
         } catch (MqttException e) {
             pushToast(e.getMessage());
         }
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         relayFragment.unsubscribeRelays();
         mqttClient.unsubscribe(subscribeTopics).subscribe();
-        mqttClient.disconnect().subscribe(() -> Log.d("MQTT", "Disconnect successful"));
+        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(() -> Log.d("MQTT", "Disconnect successful")));
     }
 
     @Override
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         mqttDisconnect();
         mqttClient.close();
+        COMPOSITE_DISPOSABLE.dispose();
         super.onDestroy();
     }
 }
