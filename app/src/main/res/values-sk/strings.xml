@@ -5,11 +5,15 @@
     <string name="title_sensors">Senzory</string>
     <string name="title_settings">Nastavenia</string>
 
+    <string name="title_garden">Záhrada</string>
+
+    <!--SENSORS-->
     <string name="rasp_temp">Rasp teplota</string>
     <string name="rasp_hum">Rasp vlhkosť</string>
     <string name="rasp_dew_point">Rasp rosný bod</string>
     <string name="depth">Hĺbka</string>
 
+    <!--RELAYS-->
     <string name="Darling">Vodáreň</string>
     <string name="Pump">Čerpadlo</string>
     <string name="Light">Svetlo</string>

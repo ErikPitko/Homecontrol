@@ -15,6 +15,7 @@ import net.eusashead.iot.mqtt.ObservableMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pitko.erik.homecontrol.IMqtt;
@@ -67,10 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void mqttConnect() {
         try {
-            connectionLock.acquire();
             mqttClient = IMqtt.getInstance().getClient();
             if (mqttClient.isConnected()) {
                 Log.i("MQTT", "Already connected");
+                return;
+            }
+            if (!connectionLock.tryAcquire(3, TimeUnit.SECONDS)) {
+                pushToast(getString(R.string.stat_err));
                 return;
             }
             COMPOSITE_DISPOSABLE.add(
@@ -105,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
         }
         homeFragment.unsubscribeSensors();
         relayFragment.unsubscribeRelays();
-        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
+        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(() -> {
+            connectionLock.release();
+            COMPOSITE_DISPOSABLE.dispose();
+        }, e -> connectionLock.release()));
     }
 
     @Override
@@ -140,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         mqttDisconnect();
         mqttClient.close();
-        COMPOSITE_DISPOSABLE.dispose();
         super.onDestroy();
     }
 }
