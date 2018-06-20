@@ -32,11 +32,12 @@ public class HomeFragment extends Fragment {
         sensors = new ArrayList<>();
 
 //        sensorText must be defined in strings.xml
-        sensors.add(new Sensor("sensor/raspberry/temperature", "rasp_temp", "C"));
-        sensors.add(new Sensor("sensor/raspberry/humidity", "rasp_hum", "%"));
-        sensors.add(new Sensor("sensor/raspberry/dew_point", "rasp_dew_point", "C"));
-        sensors.add(new Sensor("sensor/raspberry/vapor_pressure", "rasp_vapor_pressure"));
-        sensors.add(new Sensor("sensor/depth", "depth", "cm"));
+        sensors.add(new Sensor("sensor/podtatranskeho/temp", "rasp_temp", "home", "C"));
+        sensors.add(new Sensor("sensor/raspberry/temperature", "rasp_temp", "garden", "C"));
+        sensors.add(new Sensor("sensor/raspberry/humidity", "rasp_hum", "garden", "%"));
+        sensors.add(new Sensor("sensor/raspberry/dew_point", "rasp_dew_point", "garden", "C"));
+        sensors.add(new Sensor("sensor/raspberry/vapor_pressure", "rasp_vapor_pressure", "garden"));
+        sensors.add(new Sensor("sensor/depth", "depth", "garden", "cm"));
 
     }
 
@@ -81,7 +82,13 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         for (Sensor sensor : sensors) {
-            sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.sensorLayout), getActivity());
+            switch (sensor.getLayout()) {
+                case "home":
+                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.homeSensorLayout), getActivity());
+                    break;
+                case "garden":
+                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.gardenSensorLayout), getActivity());
+            }
         }
     }
 }

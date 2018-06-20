@@ -2,15 +2,18 @@
     <string name="app_name">Home control</string>
     <string name="title_home">Home</string>
     <string name="title_relays">Relays</string>
-    <string name="title_sensors">Sensors</string>
     <string name="title_settings">Settings</string>
 
+    <string name="title_garden">Garden</string>
+
+    <!--SENSORS-->
     <string name="rasp_temp">Rasp temp</string>
     <string name="rasp_hum">Rasp hum</string>
     <string name="rasp_dew_point">Rasp dew point</string>
     <string name="rasp_vapor_pressure">Rasp vapor pressure</string>
     <string name="depth">Depth</string>
 
+    <!--RELAYS-->
     <string name="Darling">Darling</string>
     <string name="Pump">Pump</string>
     <string name="Light">Light</string>

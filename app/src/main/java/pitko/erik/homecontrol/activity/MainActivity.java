@@ -14,6 +14,8 @@ import net.eusashead.iot.mqtt.ObservableMqttClient;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.util.concurrent.Semaphore;
+
 import io.reactivex.disposables.CompositeDisposable;
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
@@ -23,6 +25,8 @@ import pitko.erik.homecontrol.fragments.RelayFragment;
 public class MainActivity extends AppCompatActivity {
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
     private ObservableMqttClient mqttClient;
+    //    private ReentrantLock connectionLock = new ReentrantLock();
+    private static final Semaphore connectionLock = new Semaphore(1);
 
     private BottomNavigationView navigation;
 
@@ -61,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show());
     }
 
-    private synchronized void mqttConnect() {
+    private void mqttConnect() {
         try {
+            connectionLock.acquire();
             mqttClient = IMqtt.getInstance().getClient();
             if (mqttClient.isConnected()) {
                 Log.i("MQTT", "Already connected");
@@ -70,22 +75,37 @@ public class MainActivity extends AppCompatActivity {
             }
             COMPOSITE_DISPOSABLE.add(
                     mqttClient.connect().subscribe(() -> {
+                        connectionLock.release();
                         pushToast(getString(R.string.stat_conn));
                         homeFragment.subscribeSensors();
                         relayFragment.subscribeRelays();
-                    }, e -> pushToast(e.getCause().getLocalizedMessage()))
+                    }, e -> {
+                        connectionLock.release();
+                        if (e.getCause() != null) {
+                            pushToast(e.getCause().getLocalizedMessage());
+                        } else {
+                            pushToast(getString(R.string.stat_err));
+                        }
+                    })
             );
         } catch (MqttException e) {
             pushToast(e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    private synchronized void mqttDisconnect() {
+    private void mqttDisconnect() {
         if (!mqttClient.isConnected())
             return;
+        try {
+            connectionLock.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         homeFragment.unsubscribeSensors();
         relayFragment.unsubscribeRelays();
-        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(() -> Log.d("MQTT", "Disconnect successful")));
+        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
     }
 
     @Override

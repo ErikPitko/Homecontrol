@@ -19,15 +19,21 @@ public class Sensor {
     private String postfix;
     private SensorStatusFragment sensorFragment;
     private static int sensorCount = 1;
+    private String layout;
 
-    public Sensor(String topic, String sensorText) {
+    public Sensor(String topic, String sensorText, String layout) {
         this.topic = topic;
         this.sensorText = sensorText;
+        this.layout = layout;
     }
 
-    public Sensor(String topic, String sensorText, String postfix) {
-        this(topic, sensorText);
+    public Sensor(String topic, String sensorText, String layout, String postfix) {
+        this(topic, sensorText, layout);
         this.postfix = postfix;
+    }
+
+    public String getLayout() {
+        return layout;
     }
 
     public String getTopic() {

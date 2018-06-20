@@ -15,20 +15,37 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="30dp"
             android:background="@color/colorPrimaryDark"
             android:gravity="bottom"
             android:padding="8dp"
-            android:text="@string/title_sensors"
+            android:text="@string/title_home"
             android:textColor="@android:color/holo_blue_bright"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <RelativeLayout
-            android:id="@+id/sensorLayout"
+            android:id="@+id/homeSensorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="bottom"
+            android:padding="8dp"
+            android:text="@string/title_garden"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/gardenSensorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" />
