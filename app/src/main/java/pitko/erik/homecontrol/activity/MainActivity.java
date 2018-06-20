@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         relayFragment.unsubscribeRelays();
         COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(() -> {
             connectionLock.release();
-            COMPOSITE_DISPOSABLE.dispose();
         }, e -> connectionLock.release()));
     }
 
