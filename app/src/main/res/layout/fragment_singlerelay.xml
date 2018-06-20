@@ -22,7 +22,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/textView"
         android:focusable="true"
-        android:theme="@style/SCBSwitch"/>
+        android:theme="@style/SCBSwitch" />
 
     <View
         android:layout_width="match_parent"

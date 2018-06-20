@@ -6,33 +6,33 @@
     android:orientation="vertical"
     tools:context=".fragments.RelayFragment">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="bottom"
+            android:padding="8dp"
+            android:text="@string/title_relays"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="bottom"
-                android:padding="8dp"
-                android:text="@string/title_relays"
-                android:textColor="@android:color/holo_blue_bright"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+        <RelativeLayout
+            android:id="@+id/relayLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/relayLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-        </LinearLayout>
+    </LinearLayout>
 
 </ScrollView>

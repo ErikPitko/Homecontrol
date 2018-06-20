@@ -19,19 +19,16 @@ import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.fragments.HomeFragment;
 import pitko.erik.homecontrol.fragments.RelayFragment;
-import pitko.erik.homecontrol.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
-    public static final CompositeDisposable COMPOSITE_DISPOSABLE = new CompositeDisposable();
+    public static CompositeDisposable COMPOSITE_DISPOSABLE;
     private ObservableMqttClient mqttClient;
 
     private BottomNavigationView navigation;
 
     private HomeFragment homeFragment;
     private RelayFragment relayFragment;
-    private SettingsFragment settingsFragment;
-    private String[] subscribeTopics = {"sensor/#"};
-    private int[] subscribeQos = {0};
+//    private SettingsFragment settingsFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -61,27 +58,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void pushToast(String msg) {
         runOnUiThread(() -> Toast.makeText(getApplicationContext(), msg,
-                Toast.LENGTH_LONG).show());
+                Toast.LENGTH_SHORT).show());
     }
 
     private synchronized void mqttConnect() {
         try {
             mqttClient = IMqtt.getInstance().getClient();
             if (mqttClient.isConnected()) {
-                Log.w("MQTT", "Already connected");
+                Log.i("MQTT", "Already connected");
                 return;
             }
             COMPOSITE_DISPOSABLE.add(
                     mqttClient.connect().subscribe(() -> {
-                        mqttClient.subscribe(subscribeTopics, subscribeQos).subscribe(msg -> {
-                            Log.d("MQTT", new String(msg.getPayload()));
-                        });
                         pushToast(getString(R.string.stat_conn));
                         homeFragment.subscribeSensors();
                         relayFragment.subscribeRelays();
-                    }, e -> {
-                        pushToast(getString(R.string.stat_err));
-                    })
+                    }, e -> pushToast(e.getCause().getLocalizedMessage()))
             );
         } catch (MqttException e) {
             pushToast(e.getMessage());
@@ -91,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
     private synchronized void mqttDisconnect() {
         if (!mqttClient.isConnected())
             return;
+        homeFragment.unsubscribeSensors();
         relayFragment.unsubscribeRelays();
-        mqttClient.unsubscribe(subscribeTopics).subscribe();
         COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(() -> Log.d("MQTT", "Disconnect successful")));
     }
 
@@ -101,9 +93,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        COMPOSITE_DISPOSABLE = new CompositeDisposable();
         homeFragment = new HomeFragment();
         relayFragment = new RelayFragment();
-        settingsFragment = new SettingsFragment();
+//        settingsFragment = new SettingsFragment();
         setFragment(homeFragment);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);

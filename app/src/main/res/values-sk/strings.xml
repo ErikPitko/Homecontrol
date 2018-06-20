@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_home">Domov</string>
-    <string name="title_relays">Relatka</string>
+    <string name="title_relays">Relátka</string>
     <string name="title_sensors">Senzory</string>
     <string name="title_settings">Nastavenia</string>
 
     <string name="rasp_temp">Rasp teplota</string>
-    <string name="rasp_hum">Rasp vlhkost</string>
-    <string name="rasp_dew_point">Rasp rosny bod</string>
-    <string name="depth">Hlbka</string>
+    <string name="rasp_hum">Rasp vlhkosť</string>
+    <string name="rasp_dew_point">Rasp rosný bod</string>
+    <string name="depth">Hĺbka</string>
 
-    <string name="Darling">Vodaren</string>
-    <string name="Pump">Cerpadlo</string>
+    <string name="Darling">Vodáreň</string>
+    <string name="Pump">Čerpadlo</string>
     <string name="Light">Svetlo</string>
-    <string name="Fan">Ventilator</string>
-    <string name="EVd">Doplnanie</string>
+    <string name="Fan">Ventilátor</string>
+    <string name="EVd">Doplnenie</string>
 
-    <string name="stat_conn">Pripojene</string>
+    <string name="stat_conn">Pripojené</string>
     <string name="stat_err">Chyba</string>
-    <string name="stat_disconn">Odpojene</string>
+    <string name="stat_disconn">Odpojené</string>
 </resources>

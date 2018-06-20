@@ -8,12 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import net.eusashead.iot.mqtt.ObservableMqttClient;
-
-import org.eclipse.paho.client.mqttv3.MqttException;
-
-import pitko.erik.homecontrol.IMqtt;
-import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.SensorStatusFragment;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -42,7 +36,7 @@ public class Sensor {
 
     public void setSensorStatus(String msg) {
         this.sensorStatus = msg;
-        if (sensorFragment != null){
+        if (sensorFragment != null) {
             Activity act;
             if ((act = sensorFragment.getActivity()) != null)
                 act.runOnUiThread(() -> sensorFragment.setStatus(msg));
@@ -52,17 +46,6 @@ public class Sensor {
     private String getResourcebyId(Context context, String name) {
         Resources res = context.getResources();
         return res.getString(res.getIdentifier(name, "string", context.getPackageName()));
-    }
-
-    public void subscribe(){
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            MainActivity.COMPOSITE_DISPOSABLE.add(
-                    mqttClient.subscribe(topic, 0).subscribe(msg -> this.setSensorStatus(new String(msg.getPayload())))
-            );
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
     }
 
     public void drawSensor(Fragment instance, RelativeLayout placeHolder, Activity act) {

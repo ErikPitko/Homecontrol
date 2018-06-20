@@ -3,12 +3,9 @@ package pitko.erik.homecontrol.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import pitko.erik.homecontrol.R;
@@ -20,7 +17,7 @@ public class SensorStatusFragment extends Fragment {
     private String postfix;
     private TextView statusTxtView;
 
-    public void setPostfix(String msg){
+    public void setPostfix(String msg) {
         this.postfix = msg;
     }
 
@@ -32,7 +29,7 @@ public class SensorStatusFragment extends Fragment {
 
     public void setStatus(String text) {
         this.status = text;
-        if (statusTxtView != null){
+        if (statusTxtView != null) {
             if (postfix != null)
                 statusTxtView.setText(text + " " + postfix);
             else

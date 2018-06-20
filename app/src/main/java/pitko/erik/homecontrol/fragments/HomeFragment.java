@@ -9,10 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import net.eusashead.iot.mqtt.ObservableMqttClient;
+
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.sensors.Sensor;
 
 
@@ -34,9 +40,31 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void subscribeSensors(){
-        for (Sensor sensor:sensors){
-            sensor.subscribe();
+    public void subscribeSensors() {
+        try {
+            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+            MainActivity.COMPOSITE_DISPOSABLE.add(
+                    mqttClient.subscribe("sensor/#", 0).subscribe(msg -> {
+                        for (Sensor sensor : sensors) {
+                            if (sensor.getTopic().equals(msg.getTopic())) {
+                                sensor.setSensorStatus(new String(msg.getPayload()));
+                            }
+                        }
+                    })
+            );
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unsubscribeSensors() {
+        try {
+            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+            MainActivity.COMPOSITE_DISPOSABLE.add(
+                    mqttClient.unsubscribe("sensor/#").subscribe()
+            );
+        } catch (MqttException e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,7 +80,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        for (Sensor sensor:sensors){
+        for (Sensor sensor : sensors) {
             sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.sensorLayout), getActivity());
         }
     }

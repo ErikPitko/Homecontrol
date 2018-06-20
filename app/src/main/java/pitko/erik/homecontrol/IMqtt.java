@@ -16,10 +16,11 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 public class IMqtt {
     private static IMqtt instance = null;
     private ObservableMqttClient client;
+    private String serverURI = "tcp://192.168.42.1:1883";
 
     private IMqtt() throws MqttException {
         MemoryPersistence dataStore = new MemoryPersistence();
-        final IMqttAsyncClient paho = new MqttAsyncClient("tcp://192.168.42.1:1883", MqttAsyncClient.generateClientId(), dataStore);
+        final IMqttAsyncClient paho = new MqttAsyncClient(serverURI, MqttAsyncClient.generateClientId(), dataStore);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
         connectOptions.setConnectionTimeout(3);

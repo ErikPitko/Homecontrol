@@ -23,9 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.exceptions.OnErrorNotImplementedException;
 import pitko.erik.homecontrol.IMqtt;
-import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleRelay;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -103,7 +101,7 @@ public class Relay implements OnCheckedChangeListener {
         String msg;
         try {
             ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            if (!mqttClient.isConnected()){
+            if (!mqttClient.isConnected()) {
                 pushToast("Client not connected");
                 return;
             }
