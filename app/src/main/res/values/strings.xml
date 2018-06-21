@@ -21,6 +21,9 @@
     <string name="EVd">EVd</string>
     <string name="Boiler">Boiler</string>
 
+    <string name="relay_enabled">Enabled</string>
+    <string name="relay_disabled">Disabled</string>
+
     <string name="stat_conn">Connected</string>
     <string name="stat_err">Error</string>
     <string name="stat_disconn">Disconnected</string>

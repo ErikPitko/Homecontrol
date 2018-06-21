@@ -20,6 +20,9 @@
     <string name="Fan">Ventilátor</string>
     <string name="EVd">Doplnenie</string>
 
+    <string name="relay_enabled">Zapnuté</string>
+    <string name="relay_disabled">Vypnuté</string>
+
     <string name="stat_conn">Pripojené</string>
     <string name="stat_err">Chyba</string>
     <string name="stat_disconn">Odpojené</string>

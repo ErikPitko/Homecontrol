@@ -58,6 +58,10 @@ public class RelayFragment extends Fragment {
                         for (Relay inRelay : relays) {
                             for (Relay relay : this.relays) {
                                 if (inRelay.getRelayName().compareTo(relay.getRelayName()) == 0) {
+                                    if (getActivity() != null && relay.isNotify_subs()) {
+                                        relay.pushToast((inRelay.isState() ? getString(R.string.relay_enabled) : getString(R.string.relay_disabled)));
+                                        relay.unsetNotify_subs();
+                                    }
                                     relay.setState(inRelay.isState());
                                 }
 

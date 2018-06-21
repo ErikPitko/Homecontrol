@@ -34,6 +34,7 @@ public class Relay implements OnCheckedChangeListener {
     @SerializedName("State")
     private boolean state;
 
+    private transient boolean notify_subs = false;
     private transient FragmentSingleRelay singleRelay;
     private transient static int relayCount = 1;
 
@@ -81,6 +82,14 @@ public class Relay implements OnCheckedChangeListener {
         return relayName;
     }
 
+    public boolean isNotify_subs() {
+        return notify_subs;
+    }
+
+    public void unsetNotify_subs() {
+        this.notify_subs = false;
+    }
+
     public boolean isState() {
         return state;
     }
@@ -91,10 +100,12 @@ public class Relay implements OnCheckedChangeListener {
             this.singleRelay.setSwitchChecked(state);
     }
 
-    private void pushToast(String msg) {
+    public void pushToast(String msg) {
         Activity act = getSingleRelay().getActivity();
+        if (act == null)
+            return;
         act.runOnUiThread(() -> Toast.makeText(act, msg,
-                Toast.LENGTH_LONG).show());
+                Toast.LENGTH_SHORT).show());
     }
 
     private void publish() {
@@ -108,8 +119,9 @@ public class Relay implements OnCheckedChangeListener {
             List<Relay> list = new ArrayList<>();
             list.add(this);
             msg = new Gson().toJson(list);
-            PublishMessage message = PublishMessage.create(msg.getBytes(), 1, false);
+            PublishMessage message = PublishMessage.create(msg.getBytes(), 1, true);
             mqttClient.publish("relay/set", message).subscribe();
+            notify_subs = true;
             Log.d("Trigger", msg);
         } catch (MqttException e) {
             e.printStackTrace();
