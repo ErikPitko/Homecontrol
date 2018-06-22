@@ -130,11 +130,13 @@ public class Relay implements OnCheckedChangeListener {
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (b) {
-            this.setState(true);
-        } else {
-            this.setState(false);
+        if (compoundButton.isPressed()) {
+            if (b) {
+                this.setState(true);
+            } else {
+                this.setState(false);
+            }
+            this.publish();
         }
-        this.publish();
     }
 }

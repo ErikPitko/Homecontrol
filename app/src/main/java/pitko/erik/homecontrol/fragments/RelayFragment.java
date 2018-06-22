@@ -69,8 +69,6 @@ public class RelayFragment extends Fragment {
                         }
                     })
             );
-//            TODO switch cycle
-//            mqttClient.unsubscribe("relay").subscribe();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -85,6 +83,7 @@ public class RelayFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
