@@ -7,6 +7,7 @@
     <string name="title_garden">Garden</string>
 
     <!--SENSORS-->
+    <string name="time">Time</string>
     <string name="rasp_temp">Rasp temp</string>
     <string name="rasp_hum">Rasp hum</string>
     <string name="rasp_dew_point">Rasp dew point</string>

@@ -20,6 +20,7 @@ import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.sensors.Sensor;
+import pitko.erik.homecontrol.sensors.TimeSensor;
 
 
 /**
@@ -33,10 +34,11 @@ public class HomeFragment extends Fragment {
 
 //        sensorText must be defined in strings.xml
         sensors.add(new Sensor("sensor/podtatranskeho/temp", "rasp_temp", "home", "C"));
+        sensors.add(new TimeSensor("sensor/garden/time", "time", "garden", "min"));
         sensors.add(new Sensor("sensor/raspberry/temperature", "rasp_temp", "garden", "C"));
         sensors.add(new Sensor("sensor/raspberry/humidity", "rasp_hum", "garden", "%"));
         sensors.add(new Sensor("sensor/raspberry/dew_point", "rasp_dew_point", "garden", "C"));
-        sensors.add(new Sensor("sensor/raspberry/vapor_pressure", "rasp_vapor_pressure", "garden"));
+        sensors.add(new Sensor("sensor/raspberry/vapor_pressure", "rasp_vapor_pressure", "garden", "mBar"));
         sensors.add(new Sensor("sensor/depth", "depth", "garden", "cm"));
 
     }

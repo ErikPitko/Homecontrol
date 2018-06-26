@@ -38,7 +38,7 @@ public class Relay implements OnCheckedChangeListener {
     private transient FragmentSingleRelay singleRelay;
     private transient static int relayCount = 1;
 
-    public Relay(String relayName) {
+    Relay(String relayName) {
         this.relayName = relayName;
     }
 
@@ -119,7 +119,7 @@ public class Relay implements OnCheckedChangeListener {
             List<Relay> list = new ArrayList<>();
             list.add(this);
             msg = new Gson().toJson(list);
-            PublishMessage message = PublishMessage.create(msg.getBytes(), 1, true);
+            PublishMessage message = PublishMessage.create(msg.getBytes(), 1, false);
             mqttClient.publish("relay/set", message).subscribe();
             notify_subs = true;
             Log.d("Trigger", msg);

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import net.danlew.android.joda.JodaTimeAndroid;
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -109,14 +110,13 @@ public class MainActivity extends AppCompatActivity {
         }
         homeFragment.unsubscribeSensors();
         relayFragment.unsubscribeRelays();
-        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(() -> {
-            connectionLock.release();
-        }, e -> connectionLock.release()));
+        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        JodaTimeAndroid.init(this);
         setContentView(R.layout.activity_main);
 
         COMPOSITE_DISPOSABLE = new CompositeDisposable();
