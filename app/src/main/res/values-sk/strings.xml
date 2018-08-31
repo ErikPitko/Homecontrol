@@ -6,13 +6,14 @@
     <string name="title_settings">Nastavenia</string>
 
     <string name="title_garden">Záhrada</string>
+    <string name="title_cellar">Pivnica</string>
 
     <!--SENSORS-->
     <string name="time">Čas</string>
-    <string name="rasp_temp">Rasp teplota</string>
-    <string name="rasp_hum">Rasp vlhkosť</string>
-    <string name="rasp_dew_point">Rasp rosný bod</string>
-    <string name="rasp_vapor_pressure">Rasp tlak vodnej pary</string>
+    <string name="temp">Teplota</string>
+    <string name="hum">Vlhkosť</string>
+    <string name="dewPoint">Rosný bod</string>
+    <string name="vaporPressure">Tlak vodnej pary</string>
     <string name="depth">Hĺbka</string>
 
     <!--RELAYS-->

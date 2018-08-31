@@ -5,13 +5,14 @@
     <string name="title_settings">Settings</string>
 
     <string name="title_garden">Garden</string>
+    <string name="title_cellar">Cellar</string>
 
     <!--SENSORS-->
     <string name="time">Time</string>
-    <string name="rasp_temp">Rasp temp</string>
-    <string name="rasp_hum">Rasp hum</string>
-    <string name="rasp_dew_point">Rasp dew point</string>
-    <string name="rasp_vapor_pressure">Rasp vapor pressure</string>
+    <string name="temp">Temperature</string>
+    <string name="hum">Humidity</string>
+    <string name="dewPoint">Dew point</string>
+    <string name="vaporPressure">Vapor pressure</string>
     <string name="depth">Depth</string>
 
     <!--RELAYS-->

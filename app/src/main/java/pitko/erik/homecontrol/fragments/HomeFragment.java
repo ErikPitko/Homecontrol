@@ -33,13 +33,16 @@ public class HomeFragment extends Fragment {
         sensors = new ArrayList<>();
 
 //        sensorText must be defined in strings.xml
-        sensors.add(new Sensor("sensor/podtatranskeho/temp", "rasp_temp", "home", "C"));
+        sensors.add(new Sensor("sensor/podtatranskeho/temp", "temp", "home", "°C"));
         sensors.add(new TimeSensor("sensor/garden/time", "time", "garden", "min"));
-        sensors.add(new Sensor("sensor/raspberry/temperature", "rasp_temp", "garden", "C"));
-        sensors.add(new Sensor("sensor/raspberry/humidity", "rasp_hum", "garden", "%"));
-        sensors.add(new Sensor("sensor/raspberry/dew_point", "rasp_dew_point", "garden", "C"));
-        sensors.add(new Sensor("sensor/raspberry/vapor_pressure", "rasp_vapor_pressure", "garden", "mBar"));
-        sensors.add(new Sensor("sensor/depth", "depth", "garden", "cm"));
+        sensors.add(new Sensor("sensor/raspberry/temperature", "temp", "garden", "°C"));
+        sensors.add(new Sensor("sensor/raspberry/humidity", "hum", "garden", "%"));
+        sensors.add(new Sensor("sensor/raspberry/dew_point", "dewPoint", "garden", "°C"));
+        sensors.add(new TimeSensor("sensor/cellar/time", "time", "cellar", "min"));
+        sensors.add(new Sensor("sensor/cellar/temperature", "temp", "cellar", "°C"));
+        sensors.add(new Sensor("sensor/cellar/humidity", "hum", "cellar", "%"));
+        sensors.add(new Sensor("sensor/cellar/dewpoint", "dewPoint", "cellar", "°C"));
+        sensors.add(new Sensor("sensor/cellar/depth", "depth", "cellar", "cm"));
 
     }
 
@@ -90,6 +93,10 @@ public class HomeFragment extends Fragment {
                     break;
                 case "garden":
                     sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.gardenSensorLayout), getActivity());
+                    break;
+                case "cellar":
+                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.cellarSensorLayout), getActivity());
+                    break;
             }
         }
     }
