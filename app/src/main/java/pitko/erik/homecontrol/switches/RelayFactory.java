@@ -1,7 +1,7 @@
 package pitko.erik.homecontrol.switches;
 
 public class RelayFactory {
-    public Relay getRelay(String name) {
+    public Relay getRelay(String name, String topic) {
         Relay relay;
 
         switch (name) {
@@ -9,7 +9,7 @@ public class RelayFactory {
 //                relay = new RPump(name);
 //                break;
             default:
-                relay = new Relay(name);
+                relay = new Relay(name, topic);
         }
 
         return relay;

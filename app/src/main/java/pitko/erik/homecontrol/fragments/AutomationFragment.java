@@ -30,25 +30,20 @@ import pitko.erik.homecontrol.switches.RelayFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RelayFragment extends Fragment {
+public class AutomationFragment extends Fragment {
     private List<Relay> relays = new ArrayList<>();
-    private final String relayTopic = "relay/set";
+    private final String topic = "automation";
 
-    public RelayFragment() {
+    public AutomationFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Darling", relayTopic));
-        relays.add(rf.getRelay("EVd", relayTopic));
-        relays.add(rf.getRelay("Pump", relayTopic));
-        relays.add(rf.getRelay("Fan", relayTopic));
-        relays.add(rf.getRelay("Dryer", relayTopic));
-        relays.add(rf.getRelay("Boiler", relayTopic));
+        relays.add(rf.getRelay("Ventilation", topic + "/set"));
     }
 
     public void subscribeRelays() {
         try {
             ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
             MainActivity.COMPOSITE_DISPOSABLE.add(
-                    mqttClient.subscribe("relay", 1).subscribe(msg -> {
+                    mqttClient.subscribe(this.topic, 1).subscribe(msg -> {
                         List<Relay> relays;
                         JSONArray json = new JSONArray(new String(msg.getPayload()));
                         if (json.length() > 0) {
@@ -81,7 +76,7 @@ public class RelayFragment extends Fragment {
         ObservableMqttClient mqttClient;
         try {
             mqttClient = IMqtt.getInstance().getClient();
-            mqttClient.unsubscribe("relay").subscribe();
+            mqttClient.unsubscribe(this.topic).subscribe();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -91,11 +86,11 @@ public class RelayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_relay,
+        View view = inflater.inflate(R.layout.fragment_automation,
                 container, false);
 
         for (Relay relay : relays) {
-            relay.drawRelay(this, (RelativeLayout) view.findViewById(R.id.relayLayout));
+            relay.drawRelay(this, (RelativeLayout) view.findViewById(R.id.automationLayout));
             relay.getSingleRelay().setSwitchListener(relay);
         }
         return view;

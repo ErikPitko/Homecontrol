@@ -3,7 +3,7 @@
     <string name="title_home">Domov</string>
     <string name="title_relays">Relátka</string>
     <string name="title_sensors">Senzory</string>
-    <string name="title_settings">Nastavenia</string>
+    <string name="title_automation">Automatizácia</string>
 
     <string name="title_garden">Záhrada</string>
     <string name="title_cellar">Pivnica</string>
@@ -21,7 +21,8 @@
     <string name="Pump">Čerpadlo</string>
     <string name="Light">Svetlo</string>
     <string name="Fan">Ventilátor</string>
-    <string name="EVd">Doplnenie</string>
+    <string name="EVd">Dopĺňanie</string>
+    <string name="Dryer">Odvlhčovač</string>
 
     <string name="relay_enabled">Zapnuté</string>
     <string name="relay_disabled">Vypnuté</string>

@@ -34,11 +34,13 @@ public class Relay implements OnCheckedChangeListener {
     @SerializedName("State")
     private boolean state;
 
+    private transient String topic;
     private transient boolean notify_subs = false;
     private transient FragmentSingleRelay singleRelay;
     private transient static int relayCount = 1;
 
-    Relay(String relayName) {
+    Relay(String relayName, String topic) {
+        this.topic = topic;
         this.relayName = relayName;
     }
 
@@ -120,7 +122,7 @@ public class Relay implements OnCheckedChangeListener {
             list.add(this);
             msg = new Gson().toJson(list);
             PublishMessage message = PublishMessage.create(msg.getBytes(), 1, false);
-            mqttClient.publish("relay/set", message).subscribe();
+            mqttClient.publish(this.topic, message).subscribe();
             notify_subs = true;
             Log.d("Trigger", msg);
         } catch (MqttException e) {

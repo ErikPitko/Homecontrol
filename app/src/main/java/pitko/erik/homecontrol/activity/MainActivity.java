@@ -23,6 +23,7 @@ import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.fragments.HomeFragment;
 import pitko.erik.homecontrol.fragments.RelayFragment;
+import pitko.erik.homecontrol.fragments.AutomationFragment;
 
 public class MainActivity extends AppCompatActivity {
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HomeFragment homeFragment;
     private RelayFragment relayFragment;
-//    private SettingsFragment settingsFragment;
+    private AutomationFragment automationFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_relays:
                     setFragment(relayFragment);
                     return true;
-//                case R.id.navigation_settings:
-//                    setFragment(settingsFragment);
-//                    return true;
+                case R.id.navigation_automation:
+                    setFragment(automationFragment);
+                    return true;
             }
             return false;
         }
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         pushToast(getString(R.string.stat_conn));
                         homeFragment.subscribeSensors();
                         relayFragment.subscribeRelays();
+                        automationFragment.subscribeRelays();
                     }, e -> {
                         connectionLock.release();
                         if (e.getCause() != null) {
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
         homeFragment.unsubscribeSensors();
         relayFragment.unsubscribeRelays();
+        automationFragment.unsubscribeRelays();
         COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
     }
 
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         COMPOSITE_DISPOSABLE = new CompositeDisposable();
         homeFragment = new HomeFragment();
         relayFragment = new RelayFragment();
-//        settingsFragment = new SettingsFragment();
+        automationFragment = new AutomationFragment();
         setFragment(homeFragment);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
