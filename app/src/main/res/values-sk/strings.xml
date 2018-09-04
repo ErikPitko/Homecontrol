@@ -24,6 +24,8 @@
     <string name="EVd">Dopĺňanie</string>
     <string name="Dryer">Odvlhčovač</string>
 
+    <string name="Ventilation">Ventilácia</string>
+
     <string name="relay_enabled">Zapnuté</string>
     <string name="relay_disabled">Vypnuté</string>
 
