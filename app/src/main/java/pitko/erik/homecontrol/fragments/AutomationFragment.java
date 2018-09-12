@@ -90,7 +90,7 @@ public class AutomationFragment extends Fragment {
                 container, false);
 
         for (Relay relay : relays) {
-            relay.drawRelay(this, (RelativeLayout) view.findViewById(R.id.automationLayout));
+            relay.draw(this, (RelativeLayout) view.findViewById(R.id.automationLayout));
             relay.getSingleRelay().setSwitchListener(relay);
         }
         return view;

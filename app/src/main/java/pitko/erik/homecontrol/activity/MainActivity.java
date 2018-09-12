@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,14 +23,14 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.disposables.CompositeDisposable;
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.fragments.AutomationFragment;
+import pitko.erik.homecontrol.fragments.GraphFragment;
 import pitko.erik.homecontrol.fragments.HomeFragment;
 import pitko.erik.homecontrol.fragments.RelayFragment;
-import pitko.erik.homecontrol.fragments.AutomationFragment;
 
 public class MainActivity extends AppCompatActivity {
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
     private ObservableMqttClient mqttClient;
-    //    private ReentrantLock connectionLock = new ReentrantLock();
     private static final Semaphore connectionLock = new Semaphore(1);
 
     private BottomNavigationView navigation;
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private RelayFragment relayFragment;
     private AutomationFragment automationFragment;
+    private GraphFragment graphFragment;
+
+    public static boolean LOCAL_NET = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -51,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_automation:
                     setFragment(automationFragment);
+                    return true;
+                case R.id.navigation_graphs:
+                    setFragment(graphFragment);
                     return true;
             }
             return false;
@@ -126,11 +134,43 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         relayFragment = new RelayFragment();
         automationFragment = new AutomationFragment();
+        graphFragment = new GraphFragment();
         setFragment(homeFragment);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.net_select, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.remote_net:
+                item.setChecked(true);
+                LOCAL_NET = false;
+//                mqttDisconnect();
+//                mqttConnect();
+                break;
+            case R.id.local_net:
+                item.setChecked(true);
+                LOCAL_NET = true;
+//                mqttDisconnect();
+//                mqttConnect();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+        return true;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class Relay implements OnCheckedChangeListener {
         return res.getString(res.getIdentifier(name, "string", context.getPackageName()));
     }
 
-    public void drawRelay(Fragment instance, RelativeLayout placeHolder) {
+    public void draw(Fragment instance, RelativeLayout placeHolder) {
         Context context = instance.getContext();
 
         RelativeLayout fl = new RelativeLayout(context);

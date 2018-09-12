@@ -95,7 +95,7 @@ public class RelayFragment extends Fragment {
                 container, false);
 
         for (Relay relay : relays) {
-            relay.drawRelay(this, (RelativeLayout) view.findViewById(R.id.relayLayout));
+            relay.draw(this, (RelativeLayout) view.findViewById(R.id.relayLayout));
             relay.getSingleRelay().setSwitchListener(relay);
         }
         return view;

@@ -12,8 +12,13 @@
         android:title="@string/title_relays" />
 
     <item
-    android:id="@+id/navigation_automation"
-    android:icon="@drawable/ic_dashboard_black_24dp"
-    android:title="@string/title_automation" />
+        android:id="@+id/navigation_automation"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_automation" />
+
+    <item
+        android:id="@+id/navigation_graphs"
+        android:icon="@mipmap/timeline"
+        android:title="@string/title_graphs" />
 
 </menu>

@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_relays">Relays</string>
     <string name="title_automation">Automation</string>
+    <string name="title_graphs">Graphs</string>
 
     <string name="title_garden">Garden</string>
     <string name="title_cellar">Cellar</string>
