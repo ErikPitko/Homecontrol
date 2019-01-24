@@ -7,6 +7,8 @@
 
     <string name="title_garden">Záhrada</string>
     <string name="title_cellar">Pivnica</string>
+    <string name="title_activity_automation_config">Konfigurácia</string>
+    <string name="title_vent">Obmedzenia</string>
 
     <!--SENSORS-->
     <string name="time">Čas</string>
@@ -15,6 +17,10 @@
     <string name="dewPoint">Rosný bod</string>
     <string name="vaporPressure">Tlak vodnej pary</string>
     <string name="depth">Hĺbka</string>
+    <string name="temp_outdoor">Vonkajšia teplota</string>
+    <string name="temp_cellar">Teplota v pivnici</string>
+    <string name="temp_indoor">Vnútorná teplota</string>
+    <string name="dew_difference">Rozdiel rosného bodu</string>
 
     <!--RELAYS-->
     <string name="Darling">Vodáreň</string>

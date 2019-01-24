@@ -1,16 +1,26 @@
 package pitko.erik.homecontrol.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.fragments.configs.VentilationFragment;
 
 public class AutomationConfig extends AppCompatActivity {
-    public static enum CFG {VENTILATION}
+    public enum CFG {VENTILATION}
+
+    private static Activity act;
+
+    public static void pushToast(String msg) {
+        if (act != null)
+            act.runOnUiThread(() -> Toast.makeText(act.getApplicationContext(), msg,
+                    Toast.LENGTH_SHORT).show());
+    }
 
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

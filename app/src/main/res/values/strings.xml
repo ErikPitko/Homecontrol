@@ -7,6 +7,8 @@
 
     <string name="title_garden">Garden</string>
     <string name="title_cellar">Cellar</string>
+    <string name="title_activity_automation_config">Configuration</string>
+    <string name="title_vent">Cutdown</string>
 
     <!--SENSORS-->
     <string name="time">Time</string>
@@ -15,6 +17,10 @@
     <string name="dewPoint">Dew point</string>
     <string name="vaporPressure">Vapor pressure</string>
     <string name="depth">Depth</string>
+    <string name="temp_indoor">Indoor temperature</string>
+    <string name="temp_cellar">Cellar temperature</string>
+    <string name="temp_outdoor">Outdoor temperature</string>
+    <string name="dew_difference">Dew point difference</string>
 
     <!--RELAYS-->
     <string name="Darling">Darling</string>
@@ -36,8 +42,8 @@
     <string name="stat_disconn">Disconnected</string>
     <string name="stat_no_data">No data received</string>
     <string name="stat_already_connected">Err: Multiple connections!</string>
-    <string name="title_activity_automation_config">AutomationConfig</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- OTHER -->
+    <string name="degrees_centigrade">°C</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

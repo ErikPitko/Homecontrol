@@ -12,8 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.AutomationConfig"
-            android:label="@string/title_activity_automation_config"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_automation_config"></activity>
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
