@@ -2,12 +2,12 @@ package pitko.erik.homecontrol.sensors;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.SensorStatusFragment;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -49,11 +49,6 @@ public class Sensor {
         }
     }
 
-    private String getResourcebyId(Context context, String name) {
-        Resources res = context.getResources();
-        return res.getString(res.getIdentifier(name, "string", context.getPackageName()));
-    }
-
     public void drawSensor(Fragment instance, RelativeLayout placeHolder, Activity act) {
         Context context = instance.getContext();
 
@@ -77,7 +72,7 @@ public class Sensor {
         FragmentTransaction transaction = instance.getChildFragmentManager().beginTransaction();
         transaction.replace(fl.getId(), sensorFragment);
         transaction.commit();
-        sensorFragment.setText(getResourcebyId(context, this.sensorText));
+        sensorFragment.setText(MainActivity.getResourcebyId(this.sensorText));
         sensorFragment.setPostfix(postfix);
         act.runOnUiThread(() -> sensorFragment.setStatus(sensorStatus));
     }

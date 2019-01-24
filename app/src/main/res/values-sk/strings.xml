@@ -2,8 +2,8 @@
 <resources>
     <string name="title_home">Domov</string>
     <string name="title_relays">Relátka</string>
-    <string name="title_sensors">Senzory</string>
     <string name="title_automation">Automatizácia</string>
+    <string name="title_graphs">Grafy</string>
 
     <string name="title_garden">Záhrada</string>
     <string name="title_cellar">Pivnica</string>
@@ -26,10 +26,13 @@
 
     <string name="Ventilation">Ventilácia</string>
 
+    <!--CODES-->
     <string name="relay_enabled">Zapnuté</string>
     <string name="relay_disabled">Vypnuté</string>
 
     <string name="stat_conn">Pripojené</string>
     <string name="stat_err">Chyba</string>
     <string name="stat_disconn">Odpojené</string>
+    <string name="stat_no_data">Žiadne data</string>
+    <string name="stat_already_connected">Chyba: Viacnásobné pripojenie!</string>
 </resources>

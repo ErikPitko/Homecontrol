@@ -19,6 +19,7 @@ public class FragmentSingleRelay extends Fragment {
     private boolean switchState;
     private TextView txtView;
     private CompoundButton.OnCheckedChangeListener listener;
+    private TextView.OnClickListener textListener = null;
 
     public void setText(String text) {
         this.text = text;
@@ -36,6 +37,10 @@ public class FragmentSingleRelay extends Fragment {
 
     public void setSwitchListener(CompoundButton.OnCheckedChangeListener listener) {
         this.listener = listener;
+    }
+
+    public void setTextListener(TextView.OnClickListener listener) {
+        this.textListener = listener;
     }
 
     public void setSwitchChecked(boolean state) {
@@ -57,6 +62,8 @@ public class FragmentSingleRelay extends Fragment {
         aSwitch = (SwitchCompat) view.findViewById(R.id.switchR);
         aSwitch.setChecked(switchState);
         aSwitch.setOnCheckedChangeListener(listener);
+        if (textListener != null)
+            txtView.setOnClickListener(textListener);
         setText(text);
         return view;
     }

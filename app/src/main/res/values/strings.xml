@@ -27,10 +27,17 @@
 
     <string name="Ventilation">Ventilation</string>
 
+    <!--CODES-->
     <string name="relay_enabled">Enabled</string>
     <string name="relay_disabled">Disabled</string>
 
     <string name="stat_conn">Connected</string>
     <string name="stat_err">Error</string>
     <string name="stat_disconn">Disconnected</string>
+    <string name="stat_no_data">No data received</string>
+    <string name="stat_already_connected">Err: Multiple connections!</string>
+    <string name="title_activity_automation_config">AutomationConfig</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

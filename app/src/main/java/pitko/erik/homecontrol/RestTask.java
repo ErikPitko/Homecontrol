@@ -1,7 +1,6 @@
 package pitko.erik.homecontrol;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -19,6 +18,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Locale;
 
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
 
 /**
@@ -43,7 +43,7 @@ public class RestTask extends AsyncTask<String, Void, String> {
             HttpURLConnection conn = (HttpURLConnection) myUrl.openConnection();
             conn.setRequestMethod("GET");
             conn.setReadTimeout(10000);
-            conn.setConnectTimeout(5000);
+            conn.setConnectTimeout(3000);
             //Connect to our url
             conn.connect();
             //Create a new InputStreamReader
@@ -80,11 +80,15 @@ public class RestTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         if (result.equals(""))
             return;
-        Log.i(TAG, "RESULT = " + result);
+//        Log.i(TAG, "RESULT = " + result);
         try {
             result = "{ \"data\": " + result + " }";
             JSONObject obj = new JSONObject(result);
             JSONArray arr = obj.getJSONArray("data");
+            if (arr.length() < 2) {
+                MainActivity.pushToast(MainActivity.getResourcebyId("stat_no_data"));
+                return;
+            }
             DataPoint data[] = new DataPoint[arr.length()];
             Date min = null, max = null;
             for (int i = 0; i < arr.length(); ++i) {

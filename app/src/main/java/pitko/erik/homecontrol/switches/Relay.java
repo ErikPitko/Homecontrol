@@ -2,7 +2,6 @@ package pitko.erik.homecontrol.switches;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleRelay;
 
 import static android.widget.RelativeLayout.BELOW;
@@ -42,11 +42,6 @@ public class Relay implements OnCheckedChangeListener {
     Relay(String relayName, String topic) {
         this.topic = topic;
         this.relayName = relayName;
-    }
-
-    private String getResourcebyId(Context context, String name) {
-        Resources res = context.getResources();
-        return res.getString(res.getIdentifier(name, "string", context.getPackageName()));
     }
 
     public void draw(Fragment instance, RelativeLayout placeHolder) {
@@ -69,7 +64,7 @@ public class Relay implements OnCheckedChangeListener {
 
         singleRelay = new FragmentSingleRelay();
 //        Must be defined in strings
-        singleRelay.setText(getResourcebyId(context, this.relayName));
+        singleRelay.setText(MainActivity.getResourcebyId(this.relayName));
         FragmentTransaction transaction = instance.getChildFragmentManager().beginTransaction();
         transaction.replace(fl.getId(), singleRelay);
         transaction.commit();

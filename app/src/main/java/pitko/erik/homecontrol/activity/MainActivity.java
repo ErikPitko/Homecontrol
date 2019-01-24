@@ -1,5 +1,7 @@
 package pitko.erik.homecontrol.activity;
 
+import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -31,6 +31,10 @@ import pitko.erik.homecontrol.fragments.RelayFragment;
 public class MainActivity extends AppCompatActivity {
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
     private ObservableMqttClient mqttClient;
+    private static Activity act;
+    /**
+     * Disables multiple simultaneous connections to mqtt server
+     */
     private static final Semaphore connectionLock = new Semaphore(1);
 
     private BottomNavigationView navigation;
@@ -39,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private RelayFragment relayFragment;
     private AutomationFragment automationFragment;
     private GraphFragment graphFragment;
-
-    public static boolean LOCAL_NET = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -65,22 +67,32 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public static Activity getAct() {
+        return act;
+    }
+
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, fragment);
         fragmentTransaction.commit();
     }
 
-    private void pushToast(String msg) {
-        runOnUiThread(() -> Toast.makeText(getApplicationContext(), msg,
-                Toast.LENGTH_SHORT).show());
+    public static void pushToast(String msg) {
+        if (act != null)
+            act.runOnUiThread(() -> Toast.makeText(act.getApplicationContext(), msg,
+                    Toast.LENGTH_SHORT).show());
+    }
+
+    public static String getResourcebyId(String name) {
+        Resources res = act.getApplicationContext().getResources();
+        return res.getString(res.getIdentifier(name, "string", act.getApplicationContext().getPackageName()));
     }
 
     private void mqttConnect() {
         try {
             mqttClient = IMqtt.getInstance().getClient();
             if (mqttClient.isConnected()) {
-                Log.i("MQTT", "Already connected");
+                Log.i("MQTT", getString(R.string.stat_already_connected));
                 return;
             }
             if (!connectionLock.tryAcquire(3, TimeUnit.SECONDS)) {
@@ -127,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        act = this;
         JodaTimeAndroid.init(this);
         setContentView(R.layout.activity_main);
 
@@ -140,37 +153,6 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.net_select, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.remote_net:
-                item.setChecked(true);
-                LOCAL_NET = false;
-//                mqttDisconnect();
-//                mqttConnect();
-                break;
-            case R.id.local_net:
-                item.setChecked(true);
-                LOCAL_NET = true;
-//                mqttDisconnect();
-//                mqttConnect();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-        return true;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package pitko.erik.homecontrol.graphs;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -29,11 +28,6 @@ public class Graph {
         return layout;
     }
 
-    private String getResourcebyId(Context context, String name) {
-        Resources res = context.getResources();
-        return res.getString(res.getIdentifier(name, "string", context.getPackageName()));
-    }
-
     public void draw(Fragment instance, RelativeLayout placeHolder) {
         Context context = instance.getContext();
 
@@ -53,18 +47,12 @@ public class Graph {
         placeHolder.addView(fl);
 
         FragmentSingleGraph singleGraph = new FragmentSingleGraph();
-        singleGraph.setText(getResourcebyId(context, this.title));
+        singleGraph.setText(MainActivity.getResourcebyId(this.title));
         FragmentTransaction transaction = instance.getChildFragmentManager().beginTransaction();
         transaction.replace(fl.getId(), singleGraph);
         transaction.commit();
 
         RestTask rest = new RestTask(singleGraph);
-        String url;
-        if (!MainActivity.LOCAL_NET) {
-            url = "http://kosec.ddns.net:1880/data?topic=";
-        } else {
-            url = "http://192.168.1.48:1880/data?topic=";
-        }
-        rest.execute(url + topic);
+        rest.execute("http://kosec.ddns.net:1880/data?topic=" + topic);
     }
 }

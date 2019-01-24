@@ -16,7 +16,6 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
             android:background="@color/colorPrimaryDark"
             android:gravity="bottom"
             android:padding="8dp"

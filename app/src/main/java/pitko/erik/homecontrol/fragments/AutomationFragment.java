@@ -24,6 +24,7 @@ import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.switches.Relay;
+import pitko.erik.homecontrol.switches.RelayAutomation;
 import pitko.erik.homecontrol.switches.RelayFactory;
 
 
@@ -36,7 +37,7 @@ public class AutomationFragment extends Fragment {
 
     public AutomationFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Ventilation", topic + "/set"));
+        relays.add(rf.getRelay("Ventilation", topic + "/set", RelayFactory.RF.AUTOMATION));
     }
 
     public void subscribeRelays() {
@@ -92,6 +93,7 @@ public class AutomationFragment extends Fragment {
         for (Relay relay : relays) {
             relay.draw(this, (RelativeLayout) view.findViewById(R.id.automationLayout));
             relay.getSingleRelay().setSwitchListener(relay);
+            relay.getSingleRelay().setTextListener((RelayAutomation) relay);
         }
         return view;
 
