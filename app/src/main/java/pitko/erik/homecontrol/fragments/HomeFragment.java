@@ -35,6 +35,9 @@ public class HomeFragment extends Fragment {
 //        sensorText must be defined in strings.xml
         sensors.add(new Sensor("sensor/podtatranskeho/temp", "temp", "home", "°C"));
         sensors.add(new TimeSensor("sensor/garden/time", "time", "garden", "min"));
+        sensors.add(new Sensor("sensor/attic/temp", "temp", "attic", "°C"));
+        sensors.add(new Sensor("sensor/raspberry/voltage", "batt_v", "attic", "V"));
+        sensors.add(new Sensor("sensor/raspberry/battery", "batt_s", "attic", "%"));
         sensors.add(new Sensor("sensor/raspberry/temperature", "temp", "garden", "°C"));
         sensors.add(new Sensor("sensor/raspberry/humidity", "hum", "garden", "%"));
         sensors.add(new Sensor("sensor/raspberry/dew_point", "dewPoint", "garden", "°C"));
@@ -90,6 +93,9 @@ public class HomeFragment extends Fragment {
             switch (sensor.getLayout()) {
                 case "home":
                     sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.homeSensorLayout), getActivity());
+                    break;
+                case "attic":
+                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.atticSensorLayout), getActivity());
                     break;
                 case "garden":
                     sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.gardenSensorLayout), getActivity());

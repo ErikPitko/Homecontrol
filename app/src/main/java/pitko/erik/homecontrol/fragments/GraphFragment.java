@@ -17,6 +17,7 @@ public class GraphFragment extends Fragment {
 
     public GraphFragment() {
 //        sensorText must be defined in strings.xml
+        graphs.add(new Graph("sensor/attic/temp", "temp", "attic"));
         graphs.add(new Graph("sensor/raspberry/temperature", "temp", "garden"));
         graphs.add(new Graph("sensor/raspberry/humidity", "hum", "garden"));
         graphs.add(new Graph("sensor/raspberry/dew_point", "dewPoint", "garden"));
@@ -33,6 +34,9 @@ public class GraphFragment extends Fragment {
 
         for (Graph graph : graphs) {
             switch (graph.getLayout()) {
+                case "attic":
+                    graph.draw(this, view.findViewById(R.id.graphAttic));
+                    break;
                 case "garden":
                     graph.draw(this, view.findViewById(R.id.graphGarden));
                     break;

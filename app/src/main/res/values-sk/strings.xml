@@ -7,6 +7,7 @@
 
     <string name="title_garden">Záhrada</string>
     <string name="title_cellar">Pivnica</string>
+    <string name="title_attic">Podkrovie</string>
     <string name="title_activity_automation_config">Konfigurácia</string>
     <string name="title_vent">Obmedzenia</string>
 
@@ -21,6 +22,8 @@
     <string name="temp_cellar">Teplota v pivnici</string>
     <string name="temp_indoor">Vnútorná teplota</string>
     <string name="dew_difference">Rozdiel rosného bodu</string>
+    <string name="batt_v">Napätie baterky</string>
+    <string name="batt_s">Stav baterky</string>
 
     <!--RELAYS-->
     <string name="Darling">Vodáreň</string>

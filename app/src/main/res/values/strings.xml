@@ -7,6 +7,7 @@
 
     <string name="title_garden">Garden</string>
     <string name="title_cellar">Cellar</string>
+    <string name="title_attic">Attic</string>
     <string name="title_activity_automation_config">Configuration</string>
     <string name="title_vent">Cutdown</string>
 
@@ -21,6 +22,8 @@
     <string name="temp_cellar">Cellar temperature</string>
     <string name="temp_outdoor">Outdoor temperature</string>
     <string name="dew_difference">Dew point difference</string>
+    <string name="batt_v">Battery voltage</string>
+    <string name="batt_s">Battery status</string>
 
     <!--RELAYS-->
     <string name="Darling">Darling</string>
@@ -45,5 +48,4 @@
 
     <!-- OTHER -->
     <string name="degrees_centigrade">°C</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
