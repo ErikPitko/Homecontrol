@@ -49,6 +49,12 @@ public class Sensor {
         }
     }
 
+    /***
+     * Create new relative layout under the set placeholder at the last position
+     * @param instance parent fragment instance
+     * @param placeHolder RelativeLayout where sensor should be placed in.
+     * @param act UI thread activity
+     */
     public void drawSensor(Fragment instance, RelativeLayout placeHolder, Activity act) {
         Context context = instance.getContext();
 
@@ -63,8 +69,7 @@ public class Sensor {
         fl.setLayoutParams(flp);
         fl.setId(sensorCount++);
 
-
-//        Adding the RelativeLayout to the placeholder as a child
+//        Adding the RelativeLayout to the placeholder as a last child
         placeHolder.addView(fl);
 
         sensorFragment = new SensorStatusFragment();

@@ -44,6 +44,11 @@ public class Relay implements OnCheckedChangeListener {
         this.relayName = relayName;
     }
 
+    /***
+     * Creates new RelativeLayout and sets new FragmentSingleRelay into the newly created layout
+     * @param instance parent fragment instance
+     * @param placeHolder RelativeLayout where relay should be placed in.
+     */
     public void draw(Fragment instance, RelativeLayout placeHolder) {
         Context context = instance.getContext();
 
@@ -97,6 +102,10 @@ public class Relay implements OnCheckedChangeListener {
             this.singleRelay.setSwitchChecked(state);
     }
 
+    /***
+     * Creates short message for the user
+     * @param msg message to be shown
+     */
     public void pushToast(String msg) {
         Activity act = getSingleRelay().getActivity();
         if (act == null)
@@ -105,6 +114,9 @@ public class Relay implements OnCheckedChangeListener {
                 Toast.LENGTH_SHORT).show());
     }
 
+    /***
+     * Publish relay state to mqtt topic
+     */
     private void publish() {
         String msg;
         try {
@@ -125,6 +137,11 @@ public class Relay implements OnCheckedChangeListener {
         }
     }
 
+    /***
+     * Switch listener, sets new state to the switch and publishes it
+     * @param compoundButton button event
+     * @param b new state
+     */
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.isPressed()) {

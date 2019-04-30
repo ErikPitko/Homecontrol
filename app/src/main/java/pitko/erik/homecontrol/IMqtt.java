@@ -16,7 +16,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 public class IMqtt {
     private static IMqtt instance = null;
     private ObservableMqttClient client;
-    private final String serverURI = "ssl://m21.cloudmqtt.com:20672";
+    private final String serverURI = "ssl://kosec.ddns.net:8883";
 
     private IMqtt() throws MqttException {
 //        RxJavaPlugins.setErrorHandler(e -> Log.e("RXJava", e.getMessage()));
@@ -24,8 +24,8 @@ public class IMqtt {
         final IMqttAsyncClient paho = new MqttAsyncClient(serverURI, MqttAsyncClient.generateClientId(), dataStore);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
-        connectOptions.setUserName("plqlodwi");
-        connectOptions.setPassword("hk1IHeRtCF29".toCharArray());
+        connectOptions.setUserName("kosec");
+        connectOptions.setPassword("rangerkondor31".toCharArray());
         connectOptions.setConnectionTimeout(3);
         connectOptions.setAutomaticReconnect(true);
         connectOptions.setKeepAliveInterval(30);

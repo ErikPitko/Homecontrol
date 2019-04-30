@@ -83,11 +83,20 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show());
     }
 
+    /***
+     * Utility function, get string resource based on given name
+     * @param name name of the resource
+     * @return string resource in device language
+     */
     public static String getResourcebyId(String name) {
         Resources res = act.getApplicationContext().getResources();
         return res.getString(res.getIdentifier(name, "string", act.getApplicationContext().getPackageName()));
     }
 
+    /***
+     * Connect to the MQTT broker, function uses global variable COMPOSITE_DISPOSABLE
+     * in order to store RX callback function.
+     */
     private void mqttConnect() {
         try {
             mqttClient = IMqtt.getInstance().getClient();
@@ -143,13 +152,18 @@ public class MainActivity extends AppCompatActivity {
         JodaTimeAndroid.init(this);
         setContentView(R.layout.activity_main);
 
+//        Object storing RX functions to prevent garbage collection
         COMPOSITE_DISPOSABLE = new CompositeDisposable();
+
+//        Create fragments
         homeFragment = new HomeFragment();
         relayFragment = new RelayFragment();
         automationFragment = new AutomationFragment();
         graphFragment = new GraphFragment();
+//        Set home fragment
         setFragment(homeFragment);
 
+//        Create navigation menu
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 

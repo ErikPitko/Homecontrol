@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         sensors = new ArrayList<>();
 
-//        sensorText must be defined in strings.xml
+//        sensorText must be defined in strings.xml for language translation
         sensors.add(new Sensor("sensor/podtatranskeho/temp", "temp", "home", "°C"));
         sensors.add(new TimeSensor("sensor/garden/time", "time", "garden", "min"));
         sensors.add(new Sensor("sensor/attic/temp", "temp", "attic", "°C"));
@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+//        Add sensor to its respective layout
         for (Sensor sensor : sensors) {
             switch (sensor.getLayout()) {
                 case "home":
