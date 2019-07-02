@@ -32,7 +32,8 @@ import pitko.erik.homecontrol.switches.RelayFactory;
  */
 public class RelayFragment extends Fragment {
     private List<Relay> relays = new ArrayList<>();
-    private final String relayTopic = "relay/set";
+    private final String relayTopic = "node/cellar/relay";
+//    private final String relayTopic = "pnos/message/ESP_Cellar/Relays/relay";
 
     public RelayFragment() {
         RelayFactory rf = new RelayFactory();
