@@ -1,10 +1,11 @@
 package pitko.erik.homecontrol.graphs;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RelativeLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import pitko.erik.homecontrol.RestTask;
 import pitko.erik.homecontrol.activity.MainActivity;
