@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             mqttClient = IMqtt.getInstance().getClient();
             if (mqttClient.isConnected()) {
                 Log.i("MQTT", getString(R.string.stat_already_connected));
+                mqttSubscribe();
                 return;
             }
             if (!connectionLock.tryAcquire(3, TimeUnit.SECONDS)) {
@@ -114,9 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     mqttClient.connect().subscribe(() -> {
                         connectionLock.release();
                         pushToast(getString(R.string.stat_conn));
-                        homeFragment.subscribeSensors();
-                        relayFragment.subscribeRelays();
-                        automationFragment.subscribeRelays();
+                        mqttSubscribe();
                     }, e -> {
                         connectionLock.release();
                         if (e.getCause() != null) {
@@ -133,6 +132,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void mqttSubscribe(){
+        if (!mqttClient.isConnected())
+            return;
+        homeFragment.subscribeSensors();
+        relayFragment.subscribeRelays();
+        automationFragment.subscribeRelays();
+    }
+
+    private void mqttUnsubscribe(){
+        if (!mqttClient.isConnected())
+            return;
+        homeFragment.unsubscribeSensors();
+        relayFragment.unsubscribeRelays();
+        automationFragment.unsubscribeRelays();
+    }
+
     private void mqttDisconnect() {
         if (!mqttClient.isConnected())
             return;
@@ -141,9 +156,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        homeFragment.unsubscribeSensors();
-        relayFragment.unsubscribeRelays();
-        automationFragment.unsubscribeRelays();
+        mqttUnsubscribe();
         COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
     }
 
@@ -179,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mqttDisconnect();
+//        mqttDisconnect();
         super.onPause();
     }
 

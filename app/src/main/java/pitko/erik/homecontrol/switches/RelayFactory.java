@@ -1,18 +1,10 @@
 package pitko.erik.homecontrol.switches;
 
+import pitko.erik.homecontrol.activity.AutomationConfig;
+
 public class RelayFactory {
-    public enum RF {AUTOMATION}
-
-    public Relay getRelay(String name, String topic, RF purpose) {
-        Relay relay;
-        switch (purpose) {
-            case AUTOMATION:
-                relay = new RelayAutomation(name, topic);
-                break;
-            default:
-                relay = new Relay(name, topic);
-        }
-
+    public Relay getRelay(String name, String topic, AutomationConfig.CFG purpose) {
+        Relay relay = new RelayAutomation(name, topic, purpose);
         return relay;
     }
 

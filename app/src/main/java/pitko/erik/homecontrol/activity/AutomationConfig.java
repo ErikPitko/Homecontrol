@@ -3,6 +3,7 @@ package pitko.erik.homecontrol.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.fragments.configs.VentilationFragment;
 
 public class AutomationConfig extends AppCompatActivity {
-    public enum CFG {VENTILATION}
+    public enum CFG {VENTILATION, DRYOUT}
 
     private static Activity act;
 
@@ -39,10 +40,14 @@ public class AutomationConfig extends AppCompatActivity {
             finish();
         }
 
+        Fragment fragment;
         switch ((CFG) extras.get("config")) {
             case VENTILATION:
-                Fragment fragment = new VentilationFragment();
+                fragment = new VentilationFragment();
+                findViewById(R.id.fab).setOnClickListener((View.OnClickListener)fragment);
                 setFragment(fragment);
+                break;
+            case DRYOUT:
                 break;
         }
 

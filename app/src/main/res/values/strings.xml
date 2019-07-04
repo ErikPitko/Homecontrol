@@ -9,7 +9,7 @@
     <string name="title_cellar">Cellar</string>
     <string name="title_attic">Attic</string>
     <string name="title_activity_automation_config">Configuration</string>
-    <string name="title_vent">Cutdown</string>
+    <string name="title_vent">Ventilation</string>
 
     <!--SENSORS-->
     <string name="time">Time</string>
@@ -35,6 +35,7 @@
     <string name="Boiler">Boiler</string>
 
     <string name="Ventilation">Ventilation</string>
+    <string name="Dryout">Dryout</string>
 
     <!--CODES-->
     <string name="relay_enabled">Enabled</string>
@@ -44,7 +45,16 @@
     <string name="stat_err">Error</string>
     <string name="stat_disconn">Disconnected</string>
     <string name="stat_no_data">No data received</string>
-    <string name="stat_already_connected">Err: Multiple connections!</string>
+    <string name="stat_already_connected">Multiple connections | (resubscribing)</string>
+
+    <!--AUTOMATION-->
+    <string name="fan_on_time">Fan on time</string>
+    <string name="fan_off_time">Fan off time</string>
+    <string name="fan_dew_threshold">Fan dew threshold</string>
+    <string name="fan_min_temp">Fan min temp</string>
+
+    <string name="dryer_on_time">Dryer on time</string>
+    <string name="dryer_threshold">Dryer threshold</string>
 
     <!-- OTHER -->
     <string name="degrees_centigrade">°C</string>

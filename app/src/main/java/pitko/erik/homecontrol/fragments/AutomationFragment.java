@@ -23,6 +23,7 @@ import java.util.List;
 
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.activity.AutomationConfig;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.switches.Relay;
 import pitko.erik.homecontrol.switches.RelayAutomation;
@@ -35,10 +36,16 @@ import pitko.erik.homecontrol.switches.RelayFactory;
 public class AutomationFragment extends Fragment {
     private List<Relay> relays = new ArrayList<>();
     private final String topic = "automation";
+    private final String publishTopic = "node/cellar/automation";
 
     public AutomationFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Ventilation", topic + "/set", RelayFactory.RF.AUTOMATION));
+        relays.add(rf.getRelay("Ventilation", publishTopic, AutomationConfig.CFG.VENTILATION));
+        relays.add(rf.getRelay("Dryout", publishTopic, AutomationConfig.CFG.DRYOUT));
+
+        for (Relay relay:relays){
+            relay.setRetained(true);
+        }
     }
 
     public void subscribeRelays() {

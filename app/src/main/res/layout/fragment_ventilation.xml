@@ -36,7 +36,7 @@
             android:layout_marginEnd="16dp"
             android:layout_toStartOf="@+id/symbol"
             android:gravity="center_vertical"
-            android:text="@string/temp_cellar"
+            android:text="@string/fan_on_time"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
@@ -45,12 +45,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@+id/editText"
+            android:layout_toStartOf="@+id/fanontime"
             android:gravity="center_vertical|end"
-            android:text="&gt;" />
+            android:text="=" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/fanontime"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
@@ -59,6 +59,7 @@
             android:width="100dp"
             android:ems="10"
             android:gravity="center"
+            android:text="15"
             android:inputType="numberDecimal|numberSigned"
             android:paddingRight="20dp" />
 
@@ -69,7 +70,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:text="@string/degrees_centigrade" />
+            android:text="min" />
 
         <View
             android:layout_width="match_parent"
@@ -96,7 +97,7 @@
             android:layout_marginEnd="16dp"
             android:layout_toStartOf="@+id/symbol1"
             android:gravity="center_vertical"
-            android:text="@string/temp_outdoor"
+            android:text="@string/fan_off_time"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
@@ -105,12 +106,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@+id/editText1"
+            android:layout_toStartOf="@+id/fanofftime"
             android:gravity="center_vertical|end"
-            android:text="&gt;" />
+            android:text="=" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/fanofftime"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
@@ -118,6 +119,68 @@
             android:layout_marginEnd="40dp"
             android:width="100dp"
             android:ems="10"
+            android:text="5"
+            android:gravity="center"
+            android:inputType="numberDecimal|numberSigned"
+            android:paddingRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="min" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:background="#36393c" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/symbol2"
+            android:gravity="center_vertical"
+            android:text="@string/fan_dew_threshold"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/symbol2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/fanthreshold"
+            android:gravity="center_vertical|end"
+            android:text="&gt;" />
+
+        <EditText
+            android:id="@+id/fanthreshold"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="40dp"
+            android:width="100dp"
+            android:ems="10"
+            android:text="1.5"
             android:gravity="center"
             android:inputType="numberDecimal|numberSigned"
             android:paddingRight="20dp" />
@@ -148,29 +211,29 @@
         android:paddingRight="@dimen/activity_vertical_margin">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@+id/symbol2"
+            android:layout_toStartOf="@+id/symbol3"
             android:gravity="center_vertical"
-            android:text="@string/dew_difference"
+            android:text="@string/fan_min_temp"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/symbol2"
+            android:id="@+id/symbol3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@+id/editText2"
+            android:layout_toStartOf="@+id/fanmintemp"
             android:gravity="center_vertical|end"
             android:text="&gt;" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/fanmintemp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
@@ -178,6 +241,7 @@
             android:layout_marginEnd="40dp"
             android:width="100dp"
             android:ems="10"
+            android:text="8"
             android:gravity="center"
             android:inputType="numberDecimal|numberSigned"
             android:paddingRight="20dp" />

@@ -9,15 +9,18 @@ import pitko.erik.homecontrol.activity.AutomationConfig;
 import pitko.erik.homecontrol.activity.MainActivity;
 
 public class RelayAutomation extends Relay implements TextView.OnClickListener {
-    public RelayAutomation(String name, String topic) {
+    private AutomationConfig.CFG purpose;
+
+    public RelayAutomation(String name, String topic, AutomationConfig.CFG purpose) {
         super(name, topic);
+        this.purpose = purpose;
     }
 
     @Override
     public void onClick(View view) {
         Activity act = MainActivity.getAct();
         Intent intent = new Intent(act, AutomationConfig.class);
-        intent.putExtra("config", AutomationConfig.CFG.VENTILATION);
+        intent.putExtra("config", purpose);
         act.startActivity(intent);
 
     }
