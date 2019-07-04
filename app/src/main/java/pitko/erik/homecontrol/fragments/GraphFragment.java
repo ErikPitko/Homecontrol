@@ -25,6 +25,7 @@ public class GraphFragment extends Fragment {
         graphs.add(new Graph("sensor/cellar/temperature", "temp", "cellar"));
         graphs.add(new Graph("sensor/cellar/humidity", "hum", "cellar"));
         graphs.add(new Graph("sensor/cellar/dewpoint", "dewPoint", "cellar"));
+        graphs.add(new Graph("sensor/cellar/depth", "depth", "cellar"));
     }
 
     @Override
