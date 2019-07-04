@@ -10,6 +10,7 @@
     <string name="title_attic">Attic</string>
     <string name="title_activity_automation_config">Configuration</string>
     <string name="title_vent">Ventilation</string>
+    <string name="title_dryout">Dryout</string>
 
     <!--SENSORS-->
     <string name="time">Time</string>

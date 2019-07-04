@@ -9,7 +9,7 @@ import pitko.erik.homecontrol.activity.AutomationConfig;
 import pitko.erik.homecontrol.activity.MainActivity;
 
 public class RelayAutomation extends Relay implements TextView.OnClickListener {
-    private AutomationConfig.CFG purpose;
+    private transient AutomationConfig.CFG purpose;
 
     public RelayAutomation(String name, String topic, AutomationConfig.CFG purpose) {
         super(name, topic);

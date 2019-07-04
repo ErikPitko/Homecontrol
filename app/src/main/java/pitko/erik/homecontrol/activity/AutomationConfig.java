@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.fragments.configs.DryoutFragment;
 import pitko.erik.homecontrol.fragments.configs.VentilationFragment;
 
 public class AutomationConfig extends AppCompatActivity {
@@ -44,12 +45,14 @@ public class AutomationConfig extends AppCompatActivity {
         switch ((CFG) extras.get("config")) {
             case VENTILATION:
                 fragment = new VentilationFragment();
-                findViewById(R.id.fab).setOnClickListener((View.OnClickListener)fragment);
-                setFragment(fragment);
                 break;
             case DRYOUT:
+            default:
+                fragment = new DryoutFragment();
                 break;
         }
+        findViewById(R.id.fab).setOnClickListener((View.OnClickListener)fragment);
+        setFragment(fragment);
 
     }
 

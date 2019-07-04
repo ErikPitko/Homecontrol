@@ -42,10 +42,6 @@ public class AutomationFragment extends Fragment {
         RelayFactory rf = new RelayFactory();
         relays.add(rf.getRelay("Ventilation", publishTopic, AutomationConfig.CFG.VENTILATION));
         relays.add(rf.getRelay("Dryout", publishTopic, AutomationConfig.CFG.DRYOUT));
-
-        for (Relay relay:relays){
-            relay.setRetained(true);
-        }
     }
 
     public void subscribeRelays() {

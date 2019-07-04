@@ -21,10 +21,10 @@ import pitko.erik.homecontrol.models.AutomationField;
 
 import static pitko.erik.homecontrol.activity.AutomationConfig.pushToast;
 
-public class VentilationFragment extends Fragment implements View.OnClickListener {
-    private ArrayList<AutomationField> ventilationFieldList = new ArrayList<>();
+public class DryoutFragment extends Fragment implements View.OnClickListener {
+    private ArrayList<AutomationField> dryoutFieldList = new ArrayList<>();
 
-    public VentilationFragment() {
+    public DryoutFragment() {
         // Required empty public constructor
     }
 
@@ -33,10 +33,10 @@ public class VentilationFragment extends Fragment implements View.OnClickListene
             ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
             MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe("node/cellar/#", 1).subscribe(msg -> {
-                    for (AutomationField af : ventilationFieldList) {
-                        if (af.getTopic().equals(msg.getTopic())) {
+                    for (AutomationField df : dryoutFieldList) {
+                        if (df.getTopic().equals(msg.getTopic())) {
                             getActivity().runOnUiThread(()->{
-                                af.getEditText().setText(new String(msg.getPayload()));
+                                df.getEditText().setText(new String(msg.getPayload()));
                             });
                         }
                     }
@@ -73,11 +73,9 @@ public class VentilationFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ventilation, container, false);
-        ventilationFieldList.add(new AutomationField("node/cellar/fan_on_time", view.findViewById(R.id.fanontime)));
-        ventilationFieldList.add(new AutomationField("node/cellar/fan_off_time", view.findViewById(R.id.fanofftime)));
-        ventilationFieldList.add(new AutomationField("node/cellar/fan_dew_thresh", view.findViewById(R.id.fanthreshold)));
-        ventilationFieldList.add(new AutomationField("node/cellar/fan_min_temp", view.findViewById(R.id.fanmintemp)));
+        View view = inflater.inflate(R.layout.fragment_dryout, container, false);
+        dryoutFieldList.add(new AutomationField("node/cellar/dryer_on_time", view.findViewById(R.id.dryerontime)));
+        dryoutFieldList.add(new AutomationField("node/cellar/dryer_threshold", view.findViewById(R.id.dryerthresh)));
         subscribeFields();
         return view;
     }
@@ -91,7 +89,7 @@ public class VentilationFragment extends Fragment implements View.OnClickListene
                 pushToast("Client not connected");
                 return;
             }
-            for (AutomationField af : ventilationFieldList){
+            for (AutomationField af : dryoutFieldList){
                 mqttClient.publish(af.getTopic(), PublishMessage.create(af.getEditText().getText().toString().getBytes(), 1, true)).subscribe();
             }
         } catch (MqttException e) {
