@@ -25,6 +25,7 @@ public class Graph {
         this.layout = layout;
     }
 
+
     public String getLayout() {
         return layout;
     }
