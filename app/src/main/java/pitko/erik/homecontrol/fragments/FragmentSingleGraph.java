@@ -41,15 +41,18 @@ public class FragmentSingleGraph extends Fragment {
     public void addSeries(LineDataSet series) {
         series.setAxisDependency(YAxis.AxisDependency.LEFT);
         series.setColor(ColorTemplate.getHoloBlue());
-        series.setValueTextColor(ColorTemplate.getHoloBlue());
+        series.setValueTextColor(Color.BLUE);
         series.setLineWidth(1.5f);
-        series.setDrawCircles(false);
-        series.setDrawValues(false);
-        series.setFillAlpha(65);
-        series.setFillColor(ColorTemplate.getHoloBlue());
-        series.setHighLightColor(Color.rgb(244, 117, 117));
-        series.enableDashedHighlightLine(10f, 5f, 0f);
+        series.setDrawValues(true);
+        series.enableDashedHighlightLine(10f, 3f, 0f);
+//        circle
+        series.setDrawCircles(true);
+        series.setDrawCircleHole(true);
+        series.setCircleRadius(1f);
+        series.setCircleHoleRadius(0.2f);
+        series.setCircleColor(Color.BLUE);
 //        fill
+        series.setHighLightColor(Color.rgb(244, 117, 117));
         series.setDrawFilled(true);
         Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
         series.setFillDrawable(drawable);
