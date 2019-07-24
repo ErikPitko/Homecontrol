@@ -2,8 +2,8 @@ package pitko.erik.homecontrol;
 
 import android.os.AsyncTask;
 
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -89,19 +90,20 @@ public class RestTask extends AsyncTask<String, Void, String> {
                 MainActivity.pushToast(MainActivity.getResourcebyId("stat_no_data"));
                 return;
             }
-            DataPoint data[] = new DataPoint[arr.length()];
+            ArrayList<Entry> data = new ArrayList<>();
+
             Date min = null, max = null;
             for (int i = 0; i < arr.length(); ++i) {
                 DateTime dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
-                data[i] = new DataPoint(dateTime.toCalendar(Locale.getDefault()).getTime(), arr.getJSONObject(i).getDouble("value"));
+                data.add(new Entry(dateTime.getMillis(), (float)arr.getJSONObject(i).getDouble("value")));
                 if (i == 0) {
                     min = dateTime.toCalendar(Locale.getDefault()).getTime();
                 } else if (i == arr.length() - 1) {
                     max = dateTime.toCalendar(Locale.getDefault()).getTime();
                 }
             }
-            graph.setBounds(min, max);
-            graph.addSeries(new LineGraphSeries<>(data));
+
+            graph.addSeries(new LineDataSet(data, "Dataset1"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
