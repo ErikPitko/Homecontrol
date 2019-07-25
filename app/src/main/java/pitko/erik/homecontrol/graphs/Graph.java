@@ -15,16 +15,19 @@ import static android.widget.RelativeLayout.BELOW;
 
 public class Graph {
     private final String topic;
+
+
     private final String title;
     private final String layout;
     private static int graphCount = 1;
+
+    private FragmentSingleGraph singleGraph;
 
     public Graph(String topic, String title, String layout) {
         this.topic = topic;
         this.title = title;
         this.layout = layout;
     }
-
 
     public String getLayout() {
         return layout;
@@ -48,7 +51,7 @@ public class Graph {
 //        Adding the RelativeLayout to the placeholder as a child
         placeHolder.addView(fl);
 
-        FragmentSingleGraph singleGraph = new FragmentSingleGraph();
+        singleGraph = new FragmentSingleGraph();
         singleGraph.setText(MainActivity.getResourcebyId(this.title));
         FragmentTransaction transaction = instance.getChildFragmentManager().beginTransaction();
         transaction.replace(fl.getId(), singleGraph);

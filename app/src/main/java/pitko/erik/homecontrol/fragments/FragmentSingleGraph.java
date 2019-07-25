@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
@@ -28,14 +30,36 @@ import pitko.erik.homecontrol.R;
 public class FragmentSingleGraph extends Fragment {
     private String text;
     private TextView txtView;
-
     private LineChart chart;
     private LineData series;
+    private long dayLimitLineValue = 0;
 
     public void setText(String text) {
         this.text = text;
         if (txtView != null)
             txtView.setText(text);
+    }
+
+    public LineChart getChart() {
+        return chart;
+    }
+
+    public void setDayLimitLineValue(long value){
+        this.dayLimitLineValue = value;
+    }
+
+    public void addLimitLine(AxisBase axis, String label, float limit, int colorId){
+        if (chart != null){
+            LimitLine ll1 = new LimitLine(limit, label);
+            ll1.setLineWidth(1f);
+            ll1.enableDashedLine(10f, 10f, 0f);
+            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll1.setLineColor(colorId);
+
+            axis.addLimitLine(ll1);
+
+        }
+
     }
 
     public void addSeries(LineDataSet series) {
@@ -49,7 +73,7 @@ public class FragmentSingleGraph extends Fragment {
         series.setDrawCircles(true);
         series.setDrawCircleHole(true);
         series.setCircleRadius(1f);
-        series.setCircleHoleRadius(0.2f);
+        series.setCircleHoleRadius(0.5f);
         series.setCircleColor(Color.BLUE);
 //        fill
         series.setHighLightColor(Color.rgb(244, 117, 117));
@@ -57,11 +81,15 @@ public class FragmentSingleGraph extends Fragment {
         Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
         series.setFillDrawable(drawable);
 
+        series.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
         this.series = new LineData(series);
 
         if (this.chart != null)
             this.chart.setData(this.series);
         chart.animateX(1000);
+        addLimitLine(chart.getXAxis(), "", this.dayLimitLineValue, getResources().getColor(R.color.transparentGray));
+
     }
 
     @Nullable
@@ -95,18 +123,16 @@ public class FragmentSingleGraph extends Fragment {
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
-        xAxis.setTextSize(10f);
-        xAxis.setDrawAxisLine(false);
+        xAxis.setTextSize(11f);
+        xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(true);
         xAxis.setTextColor(Color.BLACK);
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setGranularity(1f); // one hour
+        xAxis.setCenterAxisLabels(false);
         xAxis.setValueFormatter(new ValueFormatter() {
 
             private final SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
 
             public String getFormattedValue(float value) {
-
                 return mFormat.format(new Date((long)value));
             }
         });
@@ -117,8 +143,8 @@ public class FragmentSingleGraph extends Fragment {
         leftAxis.setDrawGridLines(true);
         leftAxis.setGranularityEnabled(false);
         leftAxis.setTextColor(Color.BLACK);
-        leftAxis.setYOffset(-9f);
-
+        leftAxis.setXOffset(-0.3f);
+        leftAxis.setYOffset(-5f);
         setText(text);
         return view;
     }

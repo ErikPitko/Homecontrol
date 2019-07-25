@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
         return res.getString(res.getIdentifier(name, "string", act.getApplicationContext().getPackageName()));
     }
 
+    public static int getResourceId(String name, String defType) {
+        Resources res = act.getApplicationContext().getResources();
+        return res.getIdentifier(name, defType, act.getApplicationContext().getPackageName());
+    }
+
     /***
      * Connect to the MQTT broker, function uses global variable COMPOSITE_DISPOSABLE
      * in order to store RX callback function.

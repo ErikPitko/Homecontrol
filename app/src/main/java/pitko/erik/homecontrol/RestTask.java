@@ -16,8 +16,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
@@ -26,8 +24,6 @@ import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
  * Android RestTask (REST) from the Android Recipes book.
  */
 public class RestTask extends AsyncTask<String, Void, String> {
-    private static final String TAG = "AARestTask";
-
     private FragmentSingleGraph graph;
 
     public RestTask(FragmentSingleGraph graph) {
@@ -81,7 +77,6 @@ public class RestTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         if (result.equals(""))
             return;
-//        Log.i(TAG, "RESULT = " + result);
         try {
             result = "{ \"data\": " + result + " }";
             JSONObject obj = new JSONObject(result);
@@ -92,17 +87,16 @@ public class RestTask extends AsyncTask<String, Void, String> {
             }
             ArrayList<Entry> data = new ArrayList<>();
 
-            Date min = null, max = null;
+            long limitLineValue = 0;
             for (int i = 0; i < arr.length(); ++i) {
                 DateTime dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
-                data.add(new Entry(dateTime.getMillis(), (float)arr.getJSONObject(i).getDouble("value")));
-                if (i == 0) {
-                    min = dateTime.toCalendar(Locale.getDefault()).getTime();
-                } else if (i == arr.length() - 1) {
-                    max = dateTime.toCalendar(Locale.getDefault()).getTime();
+                if (limitLineValue == 0 && dateTime.getHourOfDay() == 0){
+                    limitLineValue = dateTime.getMillis();
                 }
+                data.add(new Entry(dateTime.getMillis(), (float)arr.getJSONObject(i).getDouble("value")));
             }
 
+            graph.setDayLimitLineValue(limitLineValue);
             graph.addSeries(new LineDataSet(data, "Dataset1"));
         } catch (JSONException e) {
             e.printStackTrace();
