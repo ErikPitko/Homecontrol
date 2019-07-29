@@ -81,7 +81,7 @@ public class FragmentSingleGraph extends Fragment {
         Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
         series.setFillDrawable(drawable);
 
-        series.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        series.setMode(LineDataSet.Mode.LINEAR);
 
         this.series = new LineData(series);
 
