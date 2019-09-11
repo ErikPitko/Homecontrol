@@ -58,6 +58,6 @@ public class Graph {
         transaction.commit();
 
         RestTask rest = new RestTask(singleGraph);
-        rest.execute("http://kosec.ddns.net:1880/data?topic=" + topic);
+        rest.execute("https://kosec.ddns.net/nodered/data?topic=" + topic);
     }
 }
