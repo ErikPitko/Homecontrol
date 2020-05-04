@@ -14,14 +14,15 @@ import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
 import static android.widget.RelativeLayout.BELOW;
 
 public class Graph {
+    private static final String REST_HOST = "https://" + MainActivity.SERVER_HOST;
     private final String topic;
-
-
     private final String title;
     private final String layout;
     private static int graphCount = 1;
 
     private FragmentSingleGraph singleGraph;
+
+    public enum TimePeriod {MONTH, DAY, HOUR}
 
     public Graph(String topic, String title, String layout) {
         this.topic = topic;
@@ -31,6 +32,11 @@ public class Graph {
 
     public String getLayout() {
         return layout;
+    }
+
+    public void loadChartData(TimePeriod timePeriod) {
+        RestTask task = new RestTask(singleGraph);
+        task.execute(REST_HOST + "/nodered/dataperiod?topic=" + this.topic + "&timeperiod=" + timePeriod.name());
     }
 
     public void draw(Fragment instance, RelativeLayout placeHolder) {
@@ -51,13 +57,12 @@ public class Graph {
 //        Adding the RelativeLayout to the placeholder as a child
         placeHolder.addView(fl);
 
-        singleGraph = new FragmentSingleGraph();
+        singleGraph = new FragmentSingleGraph(this);
         singleGraph.setText(MainActivity.getResourcebyId(this.title));
         FragmentTransaction transaction = instance.getChildFragmentManager().beginTransaction();
         transaction.replace(fl.getId(), singleGraph);
         transaction.commit();
 
-        RestTask rest = new RestTask(singleGraph);
-        rest.execute("https://kosec.ddns.net/nodered/data?topic=" + topic);
+        loadChartData(TimePeriod.DAY);
     }
 }

@@ -6,4 +6,6 @@
     <dimen name="row_height">68dp</dimen>
     <dimen name="button_height">48dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="g_button_width">60dp</dimen>
+    <dimen name="g_button_height">25dp</dimen>
 </resources>

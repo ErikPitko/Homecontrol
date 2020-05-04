@@ -87,16 +87,16 @@ public class RestTask extends AsyncTask<String, Void, String> {
             }
             ArrayList<Entry> data = new ArrayList<>();
 
-            long limitLineValue = 0;
+            int week = -1;
             for (int i = 0; i < arr.length(); ++i) {
                 DateTime dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
-                if (limitLineValue == 0 && dateTime.getHourOfDay() == 0){
-                    limitLineValue = dateTime.getMillis();
+                if (week != dateTime.getWeekOfWeekyear() && dateTime.getHourOfDay() == 0) {
+                    week = dateTime.getWeekOfWeekyear();
+                    graph.addDayLimitLineValue(dateTime.getMillis());
                 }
-                data.add(new Entry(dateTime.getMillis(), (float)arr.getJSONObject(i).getDouble("value")));
+                data.add(new Entry(dateTime.getMillis(), (float) arr.getJSONObject(i).getDouble("value")));
             }
 
-            graph.setDayLimitLineValue(limitLineValue);
             graph.addSeries(new LineDataSet(data, "Dataset1"));
         } catch (JSONException e) {
             e.printStackTrace();

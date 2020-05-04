@@ -12,6 +12,11 @@
     <string name="title_vent">Ventilation</string>
     <string name="title_dryout">Dryout</string>
 
+    <!--DAYTIME-->
+    <string name="Hour">Hour</string>
+    <string name="Day">Day</string>
+    <string name="Month">Month</string>
+
     <!--SENSORS-->
     <string name="time">Time</string>
     <string name="temp">Temperature</string>

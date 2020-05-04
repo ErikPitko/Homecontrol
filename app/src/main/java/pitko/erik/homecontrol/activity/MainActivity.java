@@ -31,6 +31,9 @@ import pitko.erik.homecontrol.fragments.HomeFragment;
 import pitko.erik.homecontrol.fragments.RelayFragment;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String SERVER_HOST = "kosec-cloud.ddns.net";
+    public static final int MQTT_SSL_PORT = 8883;
+
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
     private ObservableMqttClient mqttClient;
     private static Activity act;

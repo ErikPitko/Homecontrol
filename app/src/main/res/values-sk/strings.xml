@@ -12,6 +12,11 @@
     <string name="title_vent">Ventilácia</string>
     <string name="title_dryout">Odvlhčovanie</string>
 
+    <!--DAYTIME-->
+    <string name="Hour">Hodina</string>
+    <string name="Day">Deň</string>
+    <string name="Month">Mesiac</string>
+
     <!--SENSORS-->
     <string name="time">Čas</string>
     <string name="temp">Teplota</string>

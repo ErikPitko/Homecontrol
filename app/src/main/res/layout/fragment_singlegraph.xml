@@ -19,6 +19,54 @@
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="150dip"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true">
+
+    </com.github.mikephil.charting.charts.LineChart>
+
+    <RadioGroup
+        android:id="@+id/g_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/graph"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/g_month"
+            android:layout_width="@dimen/g_button_width"
+            android:layout_height="@dimen/g_button_height"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:text="@string/Month"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/g_day"
+            android:layout_width="@dimen/g_button_width"
+            android:layout_height="@dimen/g_button_height"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:text="@string/Day"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/g_hour"
+            android:layout_width="@dimen/g_button_width"
+            android:layout_height="@dimen/g_button_height"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="@string/Hour"
+            android:textSize="12sp" />
+    </RadioGroup>
 
 </RelativeLayout>

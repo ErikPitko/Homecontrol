@@ -9,6 +9,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import pitko.erik.homecontrol.activity.MainActivity;
+
 /**
  * Created by kosec on 15.2.18.
  */
@@ -16,7 +18,8 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 public class IMqtt {
     private static IMqtt instance = null;
     private ObservableMqttClient client;
-    private final String serverURI = "ssl://kosec.ddns.net:8883";
+    //    private final String serverURI = "ssl://kosec-cloud.ddns.net:8883";
+    private final String serverURI = "ssl://" + MainActivity.SERVER_HOST + ":" + MainActivity.MQTT_SSL_PORT;
 
     private IMqtt() throws MqttException {
 //        RxJavaPlugins.setErrorHandler(e -> Log.e("RXJava", e.getMessage()));
