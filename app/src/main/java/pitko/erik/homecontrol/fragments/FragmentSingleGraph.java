@@ -38,8 +38,8 @@ public class FragmentSingleGraph extends Fragment {
     private LineChart chart;
     private LineData series;
     private RadioGroup.OnCheckedChangeListener graphTimePeriodListener;
-    private RadioGroup graphTimePeriodGroup;
     private List<Long> dayLimitLines;
+    private Graph.TimePeriod currentTimePeriod;
 
     public FragmentSingleGraph(Graph parent) {
         this.parent = parent;
@@ -55,6 +55,10 @@ public class FragmentSingleGraph extends Fragment {
 
     public LineChart getChart() {
         return chart;
+    }
+
+    public Graph.TimePeriod getCurrentTimePeriod() {
+        return currentTimePeriod;
     }
 
     public void addDayLimitLineValue(long value) {
@@ -100,6 +104,8 @@ public class FragmentSingleGraph extends Fragment {
 
         if (this.chart != null) {
             this.chart.getXAxis().removeAllLimitLines();
+//            reset zoom
+            this.chart.zoomToCenter(1 / this.chart.getScaleX(), 1 / this.chart.getScaleY());
             this.chart.setData(this.series);
         }
         chart.animateX(1000);
@@ -110,19 +116,26 @@ public class FragmentSingleGraph extends Fragment {
     private void createGroupOnClick() {
         graphTimePeriodListener = (group, id) -> {
             String pattern;
+            this.chart.getXAxis().setGranularityEnabled(true);
             switch (id) {
-                case R.id.g_hour:
-                    parent.loadChartData(Graph.TimePeriod.HOUR);
-                    pattern = "HH:mm";
+                case R.id.g_week:
+                    pattern = "E HH'h'";
+//                    set granularity for 1 hour
+                    this.chart.getXAxis().setGranularity(60 * 60 * 1000 + 1);
+                    this.currentTimePeriod = Graph.TimePeriod.WEEK;
                     break;
                 case R.id.g_month:
-                    parent.loadChartData(Graph.TimePeriod.MONTH);
-                    pattern = "w E";
+                    pattern = "[w] E";
+//                    set granularity for 1 day
+                    this.chart.getXAxis().setGranularity(24 * 60 * 60 * 1000 + 1);
+                    this.currentTimePeriod = Graph.TimePeriod.MONTH;
                     break;
                 default:
-                    parent.loadChartData(Graph.TimePeriod.DAY);
                     pattern = "HH:mm";
+                    this.chart.getXAxis().setGranularityEnabled(false);
+                    this.currentTimePeriod = Graph.TimePeriod.DAY;
             }
+            parent.loadChartData(this.currentTimePeriod);
             chart.getXAxis().setValueFormatter(new ValueFormatter() {
                 private final SimpleDateFormat mFormat = new SimpleDateFormat(pattern, Locale.getDefault());
 
@@ -139,7 +152,7 @@ public class FragmentSingleGraph extends Fragment {
         View view = inflater.inflate(R.layout.fragment_singlegraph,
                 container, false);
         txtView = view.findViewById(R.id.textView);
-        graphTimePeriodGroup = view.findViewById(R.id.g_group);
+        RadioGroup graphTimePeriodGroup = view.findViewById(R.id.g_group);
         graphTimePeriodGroup.setOnCheckedChangeListener(graphTimePeriodListener);
 
         chart = view.findViewById(R.id.graph);
@@ -154,7 +167,7 @@ public class FragmentSingleGraph extends Fragment {
         chart.setScaleEnabled(true);
         chart.setDrawGridBackground(false);
         chart.setHighlightPerDragEnabled(false);
-        chart.setHighlightPerTapEnabled(true);
+        chart.setHighlightPerTapEnabled(false);
         // set an alternative background color
         chart.setViewPortOffsets(0f, 0f, 0f, 0f);
 

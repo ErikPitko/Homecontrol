@@ -14,7 +14,10 @@
 
     <!--DAYTIME-->
     <string name="Hour">Hodina</string>
+    <string name="hours">hod</string>
+    <string name="Week">Tyždeň</string>
     <string name="Day">Deň</string>
+    <string name="days">dní</string>
     <string name="Month">Mesiac</string>
 
     <!--SENSORS-->

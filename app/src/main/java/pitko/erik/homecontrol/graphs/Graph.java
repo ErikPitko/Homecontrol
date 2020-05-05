@@ -22,7 +22,7 @@ public class Graph {
 
     private FragmentSingleGraph singleGraph;
 
-    public enum TimePeriod {MONTH, DAY, HOUR}
+    public enum TimePeriod {MONTH, WEEK, DAY}
 
     public Graph(String topic, String title, String layout) {
         this.topic = topic;

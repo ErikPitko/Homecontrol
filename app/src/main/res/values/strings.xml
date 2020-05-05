@@ -14,7 +14,10 @@
 
     <!--DAYTIME-->
     <string name="Hour">Hour</string>
+    <string name="hours">hours</string>
+    <string name="Week">Week</string>
     <string name="Day">Day</string>
+    <string name="days">days</string>
     <string name="Month">Month</string>
 
     <!--SENSORS-->

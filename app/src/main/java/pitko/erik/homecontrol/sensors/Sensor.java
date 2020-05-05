@@ -17,7 +17,7 @@ public class Sensor {
     private final String topic;
     private final String sensorText;
     private String sensorStatus;
-    private String postfix;
+    protected String postfix;
     private SensorStatusFragment sensorFragment;
     private static int sensorCount = 1;
     private String layout;
@@ -48,6 +48,11 @@ public class Sensor {
             if ((act = sensorFragment.getActivity()) != null)
                 act.runOnUiThread(() -> sensorFragment.setStatus(msg));
         }
+    }
+
+    public void setPostfixbyResource(String postfix) {
+        this.postfix = MainActivity.getResourcebyId(postfix);
+        sensorFragment.setPostfix(this.postfix);
     }
 
     /***

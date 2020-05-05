@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
+import pitko.erik.homecontrol.graphs.Graph;
 
 /**
  * Android RestTask (REST) from the Android Recipes book.
@@ -88,11 +89,20 @@ public class RestTask extends AsyncTask<String, Void, String> {
             ArrayList<Entry> data = new ArrayList<>();
 
             int week = -1;
+            int dom = -1;
             for (int i = 0; i < arr.length(); ++i) {
                 DateTime dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
-                if (week != dateTime.getWeekOfWeekyear() && dateTime.getHourOfDay() == 0) {
-                    week = dateTime.getWeekOfWeekyear();
-                    graph.addDayLimitLineValue(dateTime.getMillis());
+                if (graph.getCurrentTimePeriod() == Graph.TimePeriod.MONTH) {
+                    if (week != dateTime.getWeekOfWeekyear() && dateTime.getDayOfWeek() == 1 && dateTime.getHourOfDay() == 0) {
+                        week = dateTime.getWeekOfWeekyear();
+                        graph.addDayLimitLineValue(dateTime.getMillis());
+                    }
+                } else {
+                    if (dom != dateTime.getDayOfMonth() && dateTime.getHourOfDay() == 0) {
+//                        week = dateTime.getWeekOfWeekyear();
+                        dom = dateTime.getDayOfMonth();
+                        graph.addDayLimitLineValue(dateTime.getMillis());
+                    }
                 }
                 data.add(new Entry(dateTime.getMillis(), (float) arr.getJSONObject(i).getDouble("value")));
             }
