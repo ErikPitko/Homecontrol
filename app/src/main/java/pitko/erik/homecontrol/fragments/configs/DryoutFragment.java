@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment;
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 import net.eusashead.iot.mqtt.PublishMessage;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import java.util.ArrayList;
 
 import pitko.erik.homecontrol.IMqtt;
@@ -29,33 +27,25 @@ public class DryoutFragment extends Fragment implements View.OnClickListener {
     }
 
     public void subscribeFields() {
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            MainActivity.COMPOSITE_DISPOSABLE.add(
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe("node/cellar/#", 1).subscribe(msg -> {
                     for (AutomationField df : dryoutFieldList) {
                         if (df.getTopic().equals(msg.getTopic())) {
-                            getActivity().runOnUiThread(()->{
+                            getActivity().runOnUiThread(() -> {
                                 df.getEditText().setText(new String(msg.getPayload()));
                             });
                         }
                     }
                 })
-            );
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+        );
     }
 
     public void unsubscribeFields() {
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            MainActivity.COMPOSITE_DISPOSABLE.add(
-                    mqttClient.unsubscribe("node/cellar/#").subscribe()
-            );
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        MainActivity.COMPOSITE_DISPOSABLE.add(
+                mqttClient.unsubscribe("node/cellar/#").subscribe()
+        );
     }
 
     @Override
@@ -82,18 +72,13 @@ public class DryoutFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        ObservableMqttClient mqttClient = null;
-        try {
-            mqttClient = IMqtt.getInstance().getClient();
-            if (!mqttClient.isConnected()) {
-                pushToast("Client not connected");
-                return;
-            }
-            for (AutomationField af : dryoutFieldList){
-                mqttClient.publish(af.getTopic(), PublishMessage.create(af.getEditText().getText().toString().getBytes(), 1, true)).subscribe();
-            }
-        } catch (MqttException e) {
-            e.printStackTrace();
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        if (!mqttClient.isConnected()) {
+            pushToast("Client not connected");
+            return;
+        }
+        for (AutomationField af : dryoutFieldList) {
+            mqttClient.publish(af.getTopic(), PublishMessage.create(af.getEditText().getText().toString().getBytes(), 1, true)).subscribe();
         }
     }
 }

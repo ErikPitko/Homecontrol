@@ -14,7 +14,6 @@ import com.google.gson.reflect.TypeToken;
 
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.json.JSONArray;
 
 import java.lang.reflect.Type;
@@ -45,46 +44,38 @@ public class AutomationFragment extends Fragment {
     }
 
     public void subscribeRelays() {
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            MainActivity.COMPOSITE_DISPOSABLE.add(
-                    mqttClient.subscribe(this.topic, 1).subscribe(msg -> {
-                        List<Relay> relays;
-                        JSONArray json = new JSONArray(new String(msg.getPayload()));
-                        if (json.length() > 0) {
-                            Type collectionType = new TypeToken<List<Relay>>() {
-                            }.getType();
-                            relays = new Gson().fromJson(json.toString(), collectionType);
-                        } else {
-                            return;
-                        }
-                        for (Relay inRelay : relays) {
-                            for (Relay relay : this.relays) {
-                                if (inRelay.getRelayName().compareTo(relay.getRelayName()) == 0) {
-                                    if (getActivity() != null && relay.isNotify_subs()) {
-                                        relay.pushToast((inRelay.isState() ? getString(R.string.relay_enabled) : getString(R.string.relay_disabled)));
-                                        relay.unsetNotify_subs();
-                                    }
-                                    relay.setState(inRelay.isState());
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        MainActivity.COMPOSITE_DISPOSABLE.add(
+                mqttClient.subscribe(this.topic, 1).subscribe(msg -> {
+                    List<Relay> relays;
+                    JSONArray json = new JSONArray(new String(msg.getPayload()));
+                    if (json.length() > 0) {
+                        Type collectionType = new TypeToken<List<Relay>>() {
+                        }.getType();
+                        relays = new Gson().fromJson(json.toString(), collectionType);
+                    } else {
+                        return;
+                    }
+                    for (Relay inRelay : relays) {
+                        for (Relay relay : this.relays) {
+                            if (inRelay.getRelayName().compareTo(relay.getRelayName()) == 0) {
+                                if (getActivity() != null && relay.isNotify_subs()) {
+                                    relay.pushToast((inRelay.isState() ? getString(R.string.relay_enabled) : getString(R.string.relay_disabled)));
+                                    relay.unsetNotify_subs();
                                 }
-
+                                relay.setState(inRelay.isState());
                             }
+
                         }
-                    })
-            );
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+                    }
+                })
+        );
     }
 
     public void unsubscribeRelays() {
         ObservableMqttClient mqttClient;
-        try {
-            mqttClient = IMqtt.getInstance().getClient();
-            mqttClient.unsubscribe(this.topic).subscribe();
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+        mqttClient = IMqtt.getInstance().getClient();
+        mqttClient.unsubscribe(this.topic).subscribe();
     }
 
 

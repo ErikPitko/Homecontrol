@@ -18,8 +18,6 @@ import com.google.gson.annotations.SerializedName;
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 import net.eusashead.iot.mqtt.PublishMessage;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,7 +102,7 @@ public class Relay implements OnCheckedChangeListener {
             this.singleRelay.setSwitchChecked(state);
     }
 
-    public void setRetained(boolean retained){
+    public void setRetained(boolean retained) {
         this.retained = retained;
     }
 
@@ -125,22 +123,18 @@ public class Relay implements OnCheckedChangeListener {
      */
     private void publish() {
         String msg;
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            if (!mqttClient.isConnected()) {
-                pushToast("Client not connected");
-                return;
-            }
-            List<Relay> list = new ArrayList<>();
-            list.add(this);
-            msg = new Gson().toJson(list);
-            PublishMessage message = PublishMessage.create(msg.getBytes(), 1, retained);
-            mqttClient.publish(this.topic, message).subscribe();
-            notify_subs = true;
-            Log.d("Trigger", msg);
-        } catch (MqttException e) {
-            e.printStackTrace();
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        if (!mqttClient.isConnected()) {
+            pushToast("Client not connected");
+            return;
         }
+        List<Relay> list = new ArrayList<>();
+        list.add(this);
+        msg = new Gson().toJson(list);
+        PublishMessage message = PublishMessage.create(msg.getBytes(), 1, retained);
+        mqttClient.publish(this.topic, message).subscribe();
+        notify_subs = true;
+        Log.d("Trigger", msg);
     }
 
     /***

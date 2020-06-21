@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,31 +47,23 @@ public class HomeFragment extends Fragment {
     }
 
     public void subscribeSensors() {
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            MainActivity.COMPOSITE_DISPOSABLE.add(
-                    mqttClient.subscribe("sensor/#", 0).subscribe(msg -> {
-                        for (Sensor sensor : sensors) {
-                            if (sensor.getTopic().equals(msg.getTopic())) {
-                                sensor.setSensorStatus(new String(msg.getPayload()));
-                            }
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        MainActivity.COMPOSITE_DISPOSABLE.add(
+                mqttClient.subscribe("sensor/#", 0).subscribe(msg -> {
+                    for (Sensor sensor : sensors) {
+                        if (sensor.getTopic().equals(msg.getTopic())) {
+                            sensor.setSensorStatus(new String(msg.getPayload()));
                         }
-                    })
-            );
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+                    }
+                })
+        );
     }
 
     public void unsubscribeSensors() {
-        try {
-            ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
-            MainActivity.COMPOSITE_DISPOSABLE.add(
-                    mqttClient.unsubscribe("sensor/#").subscribe()
-            );
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        MainActivity.COMPOSITE_DISPOSABLE.add(
+                mqttClient.unsubscribe("sensor/#").subscribe()
+        );
     }
 
 

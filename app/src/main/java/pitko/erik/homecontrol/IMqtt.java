@@ -18,17 +18,25 @@ import pitko.erik.homecontrol.activity.MainActivity;
 public class IMqtt {
     private static IMqtt instance = null;
     private ObservableMqttClient client;
-    //    private final String serverURI = "ssl://kosec-cloud.ddns.net:8883";
+    private String userName;
+    private String password;
     private final String serverURI = "ssl://" + MainActivity.SERVER_HOST + ":" + MainActivity.MQTT_SSL_PORT;
 
-    private IMqtt() throws MqttException {
-//        RxJavaPlugins.setErrorHandler(e -> Log.e("RXJava", e.getMessage()));
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void connect() throws MqttException {
         MemoryPersistence dataStore = new MemoryPersistence();
         final IMqttAsyncClient paho = new MqttAsyncClient(serverURI, MqttAsyncClient.generateClientId(), dataStore);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
-        connectOptions.setUserName("kosec");
-        connectOptions.setPassword("rangerkondor31".toCharArray());
+        connectOptions.setUserName(userName);
+        connectOptions.setPassword(password.toCharArray());
         connectOptions.setConnectionTimeout(3);
         connectOptions.setAutomaticReconnect(true);
         connectOptions.setKeepAliveInterval(30);
@@ -39,11 +47,14 @@ public class IMqtt {
                 .build();
     }
 
+    private IMqtt() {
+    }
+
     public ObservableMqttClient getClient() {
         return client;
     }
 
-    public static IMqtt getInstance() throws MqttException {
+    public static IMqtt getInstance() {
         if (instance == null)
             instance = new IMqtt();
         return instance;

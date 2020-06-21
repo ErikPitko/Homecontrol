@@ -1,8 +1,11 @@
 package pitko.erik.homecontrol.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,20 +21,29 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.RestTask;
 import pitko.erik.homecontrol.fragments.AutomationFragment;
 import pitko.erik.homecontrol.fragments.GraphFragment;
 import pitko.erik.homecontrol.fragments.HomeFragment;
 import pitko.erik.homecontrol.fragments.RelayFragment;
 
 public class MainActivity extends AppCompatActivity {
+    private static String uniqueID = null;
+    private static String deviceName;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     public static final String SERVER_HOST = "kosec-cloud.ddns.net";
+    public static final String MOSQUITTO_BACKEND = "https://" + SERVER_HOST + "/api/v1/";
     public static final int MQTT_SSL_PORT = 8883;
 
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
@@ -103,13 +115,72 @@ public class MainActivity extends AppCompatActivity {
         return res.getIdentifier(name, defType, act.getApplicationContext().getPackageName());
     }
 
+    private void registerNewDevice(RestTask restTask, String result) {
+        try {
+            int code = restTask.getConn().getResponseCode();
+            switch (code) {
+                case 202:
+                case 409:
+                    pushToast("Unauthorized");
+                    break;
+                case 400:
+                    pushToast("Invalid ID");
+                    break;
+                case 500:
+                default:
+                    pushToast("Authorization server error");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void tryToGetCredentials(RestTask restTask, String result) {
+        try {
+            int responseCode = restTask.getConn().getResponseCode();
+            if (responseCode == 200 || responseCode == 404) {
+                IMqtt mqtt = IMqtt.getInstance();
+                JSONObject obj = new JSONObject(result);
+                mqtt.setUserName(obj.getJSONObject("username").getString("String"));
+                mqtt.setPassword(obj.getJSONObject("password").getString("String"));
+                mqttConnect();
+            } else {
+                pushToast("Unauthorized");
+            }
+            return;
+        } catch (JSONException | IOException e) {
+            Log.w("REST", "Could not get credentials to MQTT broker");
+        }
+
+        try {
+            RestTask task = new RestTask(RestTask.METHOD.PUT);
+            task.setPostExecuteCallback(this::registerNewDevice);
+            JSONObject json = new JSONObject();
+            json.put("androidID", uniqueID);
+            json.put("name", deviceName);
+            task.setJsonOut(json);
+            task.execute(MOSQUITTO_BACKEND + "putAndroidID");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void authorizeAndConnectMqtt() {
+        RestTask task = new RestTask(RestTask.METHOD.GET);
+        task.setPostExecuteCallback(this::tryToGetCredentials);
+        task.execute(MOSQUITTO_BACKEND + "getCredentials?androidID=" + uniqueID);
+    }
+
     /***
      * Connect to the MQTT broker, function uses global variable COMPOSITE_DISPOSABLE
      * in order to store RX callback function.
      */
     private void mqttConnect() {
         try {
-            mqttClient = IMqtt.getInstance().getClient();
+            IMqtt mqtt = IMqtt.getInstance();
+            mqtt.connect();
+            mqttClient = mqtt.getClient();
             if (mqttClient.isConnected()) {
                 Log.i("MQTT", getString(R.string.stat_already_connected));
                 mqttSubscribe();
@@ -140,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void mqttSubscribe(){
+    public void mqttSubscribe() {
         if (!mqttClient.isConnected())
             return;
         homeFragment.subscribeSensors();
@@ -148,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         automationFragment.subscribeRelays();
     }
 
-    private void mqttUnsubscribe(){
+    private void mqttUnsubscribe() {
         if (!mqttClient.isConnected())
             return;
         homeFragment.unsubscribeSensors();
@@ -168,9 +239,29 @@ public class MainActivity extends AppCompatActivity {
         COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
     }
 
+    public synchronized static String id(Context context) {
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.apply();
+            }
+        }
+        return uniqueID;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uniqueID = id(this);
+        deviceName = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
+        if (deviceName == null) {
+            deviceName = "Undefined";
+        }
         act = this;
         JodaTimeAndroid.init(this);
         setContentView(R.layout.activity_main);
@@ -195,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mqttConnect();
+        authorizeAndConnectMqtt();
     }
 
     @Override
@@ -206,8 +297,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mqttDisconnect();
-        mqttClient.close();
+        if (mqttClient != null) {
+            mqttDisconnect();
+            mqttClient.close();
+        }
         super.onDestroy();
     }
 }

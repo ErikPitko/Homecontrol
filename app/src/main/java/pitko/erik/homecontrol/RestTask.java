@@ -1,49 +1,95 @@
 package pitko.erik.homecontrol;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineDataSet;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 
-import pitko.erik.homecontrol.activity.MainActivity;
-import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
-import pitko.erik.homecontrol.graphs.Graph;
-
-/**
- * Android RestTask (REST) from the Android Recipes book.
- */
 public class RestTask extends AsyncTask<String, Void, String> {
-    private FragmentSingleGraph graph;
+    public enum METHOD {GET, POST, PUT}
 
-    public RestTask(FragmentSingleGraph graph) {
-        this.graph = graph;
+    private METHOD method;
+    private Callback backgroundCallback;
+    private Callback postExecuteCallback;
+    private int readTimeout = 10000;
+    private int connectTimeout = 3000;
+    private JSONObject jsonOut = null;
+    private HttpURLConnection conn;
+
+    private Object backgroundCallbackResult;
+
+    public interface Callback {
+        void doJob(RestTask task, String data);
+    }
+
+    public RestTask(METHOD method) {
+        this.method = method;
+    }
+
+    public void setBackgroundCallback(Callback cb) {
+        this.backgroundCallback = cb;
+    }
+
+    public void setPostExecuteCallback(Callback cb) {
+        this.postExecuteCallback = cb;
+    }
+
+    public void setBackgroundCallbackResult(Object backgroundCallbackResult) {
+        this.backgroundCallbackResult = backgroundCallbackResult;
+    }
+
+    public Object getBackgroundCallbackResult() {
+        return backgroundCallbackResult;
+    }
+
+    public HttpURLConnection getConn() {
+        return conn;
+    }
+
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public void setJsonOut(JSONObject jsonOut) {
+        this.jsonOut = jsonOut;
     }
 
     @Override
     protected String doInBackground(String... params) {
         String stringUrl = params[0];
         String inputLine;
-        String result;
+        String result = "";
+        int responseCode = -1;
         try {
             URL myUrl = new URL(stringUrl);
-            HttpURLConnection conn = (HttpURLConnection) myUrl.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(3000);
+            conn = (HttpURLConnection) myUrl.openConnection();
+            conn.setRequestMethod(method.toString());
+            conn.setReadTimeout(readTimeout);
+            conn.setConnectTimeout(connectTimeout);
             //Connect to our url
+            if (jsonOut != null)
+                conn.setDoOutput(true);
+            else
+                conn.setDoOutput(false);
             conn.connect();
+
+            if (jsonOut != null) {
+                OutputStream out = conn.getOutputStream();
+                out.write(jsonOut.toString().getBytes(StandardCharsets.UTF_8));
+            }
+            responseCode = conn.getResponseCode();
             //Create a new InputStreamReader
             InputStreamReader streamReader = new
                     InputStreamReader(conn.getInputStream());
@@ -54,17 +100,25 @@ public class RestTask extends AsyncTask<String, Void, String> {
             while ((inputLine = reader.readLine()) != null) {
                 stringBuilder.append(inputLine);
             }
-            //Close our InputStream and Buffered reader
+            //Close our InputStream, Buffered reader and connection
             reader.close();
             streamReader.close();
+            conn.disconnect();
             //Set our result equal to our stringBuilder
             result = stringBuilder.toString();
+        } catch (FileNotFoundException e) {
+            if (responseCode >= 400 && responseCode <= 499) {
+                Log.w("MQTT", "Error code from api");
+            }
         } catch (Exception e) {
             // TODO handle this properly
             e.printStackTrace();
             return "";
         }
 
+        if (this.backgroundCallback != null) {
+            this.backgroundCallback.doJob(this, result);
+        }
         return result;
     }
 
@@ -76,41 +130,8 @@ public class RestTask extends AsyncTask<String, Void, String> {
      */
     @Override
     protected void onPostExecute(String result) {
-        if (result.equals(""))
-            return;
-        try {
-            result = "{ \"data\": " + result + " }";
-            JSONObject obj = new JSONObject(result);
-            JSONArray arr = obj.getJSONArray("data");
-            if (arr.length() < 2) {
-                MainActivity.pushToast(MainActivity.getResourcebyId("stat_no_data"));
-                return;
-            }
-            ArrayList<Entry> data = new ArrayList<>();
-
-            int week = -1;
-            int dom = -1;
-            for (int i = 0; i < arr.length(); ++i) {
-                DateTime dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
-                if (graph.getCurrentTimePeriod() == Graph.TimePeriod.MONTH) {
-                    if (week != dateTime.getWeekOfWeekyear() && dateTime.getDayOfWeek() == 1 && dateTime.getHourOfDay() == 0) {
-                        week = dateTime.getWeekOfWeekyear();
-                        graph.addDayLimitLineValue(dateTime.getMillis());
-                    }
-                } else {
-                    if (dom != dateTime.getDayOfMonth() && dateTime.getHourOfDay() == 0) {
-//                        week = dateTime.getWeekOfWeekyear();
-                        dom = dateTime.getDayOfMonth();
-                        graph.addDayLimitLineValue(dateTime.getMillis());
-                    }
-                }
-                data.add(new Entry(dateTime.getMillis(), (float) arr.getJSONObject(i).getDouble("value")));
-            }
-
-            graph.addSeries(new LineDataSet(data, "Dataset1"));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (this.postExecuteCallback != null) {
+            this.postExecuteCallback.doJob(this, result);
         }
     }
-
 }
