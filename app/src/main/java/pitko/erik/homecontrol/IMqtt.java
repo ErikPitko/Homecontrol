@@ -30,7 +30,7 @@ public class IMqtt {
         this.password = password;
     }
 
-    public void connect() throws MqttException {
+    public ObservableMqttClient buildClient() throws MqttException {
         MemoryPersistence dataStore = new MemoryPersistence();
         final IMqttAsyncClient paho = new MqttAsyncClient(serverURI, MqttAsyncClient.generateClientId(), dataStore);
 
@@ -45,6 +45,7 @@ public class IMqtt {
         client = PahoObservableMqttClient.builder(paho)
                 .setConnectOptions(connectOptions)
                 .build();
+        return client;
     }
 
     private IMqtt() {

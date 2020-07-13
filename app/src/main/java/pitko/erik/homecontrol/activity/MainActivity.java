@@ -167,9 +167,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void authorizeAndConnectMqtt() {
-        RestTask task = new RestTask(RestTask.METHOD.GET);
-        task.setPostExecuteCallback(this::tryToGetCredentials);
-        task.execute(MOSQUITTO_BACKEND + "getCredentials?androidID=" + uniqueID);
+        if (mqttClient != null && mqttClient.isConnected()) {
+            Log.i("MQTT", getString(R.string.stat_already_connected));
+            mqttSubscribe();
+        } else {
+            RestTask task = new RestTask(RestTask.METHOD.GET);
+            task.setPostExecuteCallback(this::tryToGetCredentials);
+            task.execute(MOSQUITTO_BACKEND + "getCredentials?androidID=" + uniqueID);
+        }
     }
 
     /***
@@ -179,15 +184,10 @@ public class MainActivity extends AppCompatActivity {
     private void mqttConnect() {
         try {
             IMqtt mqtt = IMqtt.getInstance();
-            mqtt.connect();
-            mqttClient = mqtt.getClient();
-            if (mqttClient.isConnected()) {
-                Log.i("MQTT", getString(R.string.stat_already_connected));
-                mqttSubscribe();
-                return;
-            }
+            mqttClient = mqtt.buildClient();
+            ;
             if (!connectionLock.tryAcquire(3, TimeUnit.SECONDS)) {
-                pushToast(getString(R.string.stat_err));
+                pushToast("Timeout");
                 return;
             }
             COMPOSITE_DISPOSABLE.add(

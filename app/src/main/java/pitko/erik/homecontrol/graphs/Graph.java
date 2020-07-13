@@ -50,7 +50,7 @@ public class Graph {
         task.setBackgroundCallback(this::processGraphData);
         task.setPostExecuteCallback(this::drawData);
 
-        task.execute(REST_HOST + "/nodered/dataperiod?topic=" + this.topic + "&timeperiod=" + timePeriod.name());
+        task.execute(REST_HOST + "/sensorapi/v1/dataperiod?topic=" + this.topic + "&timeperiod=" + timePeriod.name());
     }
 
     public void draw(Fragment instance, RelativeLayout placeHolder) {
@@ -96,7 +96,12 @@ public class Graph {
             int week = -1;
             int dom = -1;
             for (int i = 0; i < arr.length(); ++i) {
-                DateTime dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
+                DateTime dateTime;
+                try {
+                    dateTime = ISODateTimeFormat.dateTime().parseDateTime(arr.getJSONObject(i).getString("datetime"));
+                } catch (IllegalArgumentException e) {
+                    dateTime = ISODateTimeFormat.dateTimeNoMillis().parseDateTime(arr.getJSONObject(i).getString("datetime"));
+                }
                 if (singleGraph.getCurrentTimePeriod() == Graph.TimePeriod.MONTH) {
                     if (week != dateTime.getWeekOfWeekyear() && dateTime.getDayOfWeek() == 1 && dateTime.getHourOfDay() == 0) {
                         week = dateTime.getWeekOfWeekyear();
