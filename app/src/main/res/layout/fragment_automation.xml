@@ -23,7 +23,7 @@
             android:background="@color/colorPrimaryDark"
             android:gravity="bottom"
             android:padding="8dp"
-            android:text="@string/title_garden"
+            android:text="@string/garden"
             android:textColor="@android:color/holo_blue_bright"
             android:textSize="14sp"
             android:textStyle="bold" />

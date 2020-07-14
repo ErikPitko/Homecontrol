@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import net.eusashead.iot.mqtt.ObservableMqttClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,20 +34,34 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
         sensors = new ArrayList<>();
+    }
 
-//        sensorText must be defined in strings.xml for language translation
-//        sensors.add(new Sensor("sensor/podtatranskeho/temp", "temp", "home", "°C"));
-        sensors.add(new TimeSensor("sensor/garden/time", "time", "garden", "min"));
-        sensors.add(new Sensor("sensor/attic/temp", "temp", "attic", "°C"));
-        sensors.add(new Sensor("sensor/raspberry/temperature", "temp", "garden", "°C"));
-        sensors.add(new Sensor("sensor/raspberry/humidity", "hum", "garden", "%"));
-        sensors.add(new Sensor("sensor/raspberry/dew_point", "dewPoint", "garden", "°C"));
-        sensors.add(new TimeSensor("sensor/cellar/time", "time", "cellar", "min"));
-        sensors.add(new Sensor("sensor/cellar/temperature", "temp", "cellar", "°C"));
-        sensors.add(new Sensor("sensor/cellar/humidity", "hum", "cellar", "%"));
-        sensors.add(new Sensor("sensor/cellar/dewpoint", "dewPoint", "cellar", "°C"));
-        sensors.add(new Sensor("sensor/cellar/depth", "depth", "cellar", "cm"));
+    public void parseSensors(JSONArray sensors) throws JSONException {
+        ArrayList<Sensor> sensorArrayList = new ArrayList<>();
+        JSONObject sensor;
+        for (int i = 0; i < sensors.length(); i++) {
+            sensor = sensors.getJSONObject(i);
+            switch (sensor.getInt("type")) {
+                case 0:
+                    sensorArrayList.add(
+                            new Sensor(
+                                    sensor.getString("topic"),
+                                    sensor.getString("label"),
+                                    sensor.getString("layout"),
+                                    sensor.getString("postfix")));
+                    break;
+                case 1:
+                    sensorArrayList.add(
+                            new TimeSensor(
+                                    sensor.getString("topic"),
+                                    sensor.getString("label"),
+                                    sensor.getString("layout"),
+                                    sensor.getString("postfix")));
+                    break;
 
+            }
+        }
+        this.sensors = sensorArrayList;
     }
 
     public void subscribeSensors() {
@@ -75,25 +93,18 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Sensor.destroyPlaceHolderMap();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 //        Add sensor to its respective layout
         for (Sensor sensor : sensors) {
-            switch (sensor.getLayout()) {
-//                case "home":
-//                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.homeSensorLayout), getActivity());
-//                    break;
-                case "attic":
-                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.atticSensorLayout), getActivity());
-                    break;
-                case "garden":
-                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.gardenSensorLayout), getActivity());
-                    break;
-                case "cellar":
-                    sensor.drawSensor(this, (RelativeLayout) view.findViewById(R.id.cellarSensorLayout), getActivity());
-                    break;
-            }
+            sensor.drawSensor(this, (LinearLayout) view.findViewById(R.id.sensorPlaceholder), getActivity());
         }
     }
 }

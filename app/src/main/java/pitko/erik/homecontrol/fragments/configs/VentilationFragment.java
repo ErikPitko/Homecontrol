@@ -17,8 +17,6 @@ import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.models.AutomationField;
 
-import static pitko.erik.homecontrol.activity.AutomationConfig.pushToast;
-
 public class VentilationFragment extends Fragment implements View.OnClickListener {
     private ArrayList<AutomationField> ventilationFieldList = new ArrayList<>();
 
@@ -76,11 +74,12 @@ public class VentilationFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
         if (!mqttClient.isConnected()) {
-            pushToast("Client not connected");
+            MainActivity.pushToast("Client not connected");
             return;
         }
         for (AutomationField af : ventilationFieldList) {
             mqttClient.publish(af.getTopic(), PublishMessage.create(af.getEditText().getText().toString().getBytes(), 1, true)).subscribe();
         }
+        MainActivity.pushToast(MainActivity.getResourcebyId("saved"));
     }
 }

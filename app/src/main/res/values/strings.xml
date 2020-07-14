@@ -5,9 +5,10 @@
     <string name="title_automation">Automation</string>
     <string name="title_graphs">Graphs</string>
 
-    <string name="title_garden">Garden</string>
-    <string name="title_cellar">Cellar</string>
-    <string name="title_attic">Attic</string>
+    <string name="home">Home</string>
+    <string name="garden">Garden</string>
+    <string name="cellar">Cellar</string>
+    <string name="attic">Attic</string>
     <string name="title_activity_automation_config">Configuration</string>
     <string name="title_vent">Ventilation</string>
     <string name="title_dryout">Dryout</string>
@@ -47,6 +48,8 @@
     <string name="Dryout">Dryout</string>
 
     <!--CODES-->
+    <string name="saved">Saved</string>
+
     <string name="relay_enabled">Enabled</string>
     <string name="relay_disabled">Disabled</string>
 
@@ -66,5 +69,5 @@
     <string name="dryer_threshold">Dryer threshold</string>
 
     <!-- OTHER -->
-    <string name="degrees_centigrade">°C</string>
+    <string name="degrees_centigrade" translatable="false">°C</string>
 </resources>

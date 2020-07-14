@@ -5,9 +5,10 @@
     <string name="title_automation">Automatizácia</string>
     <string name="title_graphs">Grafy</string>
 
-    <string name="title_garden">Záhrada</string>
-    <string name="title_cellar">Pivnica</string>
-    <string name="title_attic">Podkrovie</string>
+    <string name="home">Domov</string>
+    <string name="garden">Záhrada</string>
+    <string name="cellar">Pivnica</string>
+    <string name="attic">Podkrovie</string>
     <string name="title_activity_automation_config">Konfigurácia</string>
     <string name="title_vent">Ventilácia</string>
     <string name="title_dryout">Odvlhčovanie</string>
@@ -55,6 +56,8 @@
     <string name="dryer_threshold">Prahová hodnota</string>
 
     <!--CODES-->
+    <string name="saved">Uložené</string>
+
     <string name="relay_enabled">Zapnuté</string>
     <string name="relay_disabled">Vypnuté</string>
 

@@ -20,7 +20,7 @@
             android:background="@color/colorPrimaryDark"
             android:gravity="bottom"
             android:padding="8dp"
-            android:text="@string/title_attic"
+            android:text="@string/attic"
             android:textColor="@android:color/holo_blue_bright"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:gravity="bottom"
             android:layout_marginTop="30dp"
             android:padding="8dp"
-            android:text="@string/title_garden"
+            android:text="@string/garden"
             android:textColor="@android:color/holo_blue_bright"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -60,7 +60,7 @@
             android:background="@color/colorPrimaryDark"
             android:gravity="bottom"
             android:padding="8dp"
-            android:text="@string/title_cellar"
+            android:text="@string/cellar"
             android:textColor="@android:color/holo_blue_bright"
             android:textSize="14sp"
             android:textStyle="bold" />

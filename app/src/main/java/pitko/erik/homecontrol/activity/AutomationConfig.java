@@ -1,14 +1,14 @@
 package pitko.erik.homecontrol.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import java.util.Objects;
 
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.fragments.configs.DryoutFragment;
@@ -16,14 +16,6 @@ import pitko.erik.homecontrol.fragments.configs.VentilationFragment;
 
 public class AutomationConfig extends AppCompatActivity {
     public enum CFG {VENTILATION, DRYOUT}
-
-    private static Activity act;
-
-    public static void pushToast(String msg) {
-        if (act != null)
-            act.runOnUiThread(() -> Toast.makeText(act.getApplicationContext(), msg,
-                    Toast.LENGTH_SHORT).show());
-    }
 
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -42,7 +34,7 @@ public class AutomationConfig extends AppCompatActivity {
         }
 
         Fragment fragment;
-        switch ((CFG) extras.get("config")) {
+        switch ((CFG) Objects.requireNonNull(extras.get("config"))) {
             case VENTILATION:
                 fragment = new VentilationFragment();
                 break;

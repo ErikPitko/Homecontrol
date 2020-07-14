@@ -17,8 +17,6 @@ import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.models.AutomationField;
 
-import static pitko.erik.homecontrol.activity.AutomationConfig.pushToast;
-
 public class DryoutFragment extends Fragment implements View.OnClickListener {
     private ArrayList<AutomationField> dryoutFieldList = new ArrayList<>();
 
@@ -74,11 +72,12 @@ public class DryoutFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
         if (!mqttClient.isConnected()) {
-            pushToast("Client not connected");
+            MainActivity.pushToast("Client not connected");
             return;
         }
         for (AutomationField af : dryoutFieldList) {
             mqttClient.publish(af.getTopic(), PublishMessage.create(af.getEditText().getText().toString().getBytes(), 1, true)).subscribe();
         }
+        MainActivity.pushToast(MainActivity.getResourcebyId("saved"));
     }
 }

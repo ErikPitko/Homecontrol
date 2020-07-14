@@ -107,7 +107,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public static String getResourcebyId(String name) {
         Resources res = act.getApplicationContext().getResources();
-        return res.getString(res.getIdentifier(name, "string", act.getApplicationContext().getPackageName()));
+        int id = res.getIdentifier(name, "string", act.getApplicationContext().getPackageName());
+        if (id > 0) {
+            return res.getString(id);
+        } else {
+            return null;
+        }
     }
 
     public static int getResourceId(String name, String defType) {
@@ -144,13 +149,17 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject(result);
                 mqtt.setUserName(obj.getJSONObject("username").getString("String"));
                 mqtt.setPassword(obj.getJSONObject("password").getString("String"));
+                homeFragment.parseSensors(obj.getJSONArray("sensors"));
                 mqttConnect();
+                //        Set home fragment
+                setFragment(homeFragment);
             } else {
                 pushToast("Unauthorized");
             }
             return;
         } catch (JSONException | IOException e) {
             Log.w("REST", "Could not get credentials to MQTT broker");
+            e.printStackTrace();
         }
 
         try {
@@ -274,8 +283,6 @@ public class MainActivity extends AppCompatActivity {
         relayFragment = new RelayFragment();
         automationFragment = new AutomationFragment();
         graphFragment = new GraphFragment();
-//        Set home fragment
-        setFragment(homeFragment);
 
 //        Create navigation menu
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
