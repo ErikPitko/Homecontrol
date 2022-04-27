@@ -12,20 +12,26 @@ import java.util.List;
 
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.graphs.Graph;
+import pitko.erik.homecontrol.sensors.Sensor;
+import pitko.erik.homecontrol.sensors.TimeSensor;
 
 public class GraphFragment extends Fragment {
     private List<Graph> graphs = new ArrayList<>();
 
     public GraphFragment() {
 //        sensorText must be defined in strings.xml
-        graphs.add(new Graph("sensor/attic/temp", "temp", "attic"));
-        graphs.add(new Graph("sensor/raspberry/temperature", "temp", "garden"));
-        graphs.add(new Graph("sensor/raspberry/humidity", "hum", "garden"));
-        graphs.add(new Graph("sensor/raspberry/dew_point", "dewPoint", "garden"));
-        graphs.add(new Graph("sensor/cellar/temperature", "temp", "cellar"));
-        graphs.add(new Graph("sensor/cellar/humidity", "hum", "cellar"));
-        graphs.add(new Graph("sensor/cellar/dewpoint", "dewPoint", "cellar"));
-        graphs.add(new Graph("sensor/cellar/depth", "depth", "cellar"));
+    }
+
+    public void parseSensors(ArrayList<Sensor> sensorList) {
+        if(!this.graphs.isEmpty()){
+            this.graphs.clear();
+        }
+        for (Sensor sensor : sensorList) {
+//            Ignore time sensors
+            if (sensor instanceof TimeSensor)
+                continue;
+            graphs.add(new Graph(sensor.getTopic(), sensor.getSensorText(), sensor.getLayout()));
+        }
     }
 
     @Override

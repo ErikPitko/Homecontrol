@@ -15,7 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 import net.eusashead.iot.mqtt.ObservableMqttClient;
@@ -25,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -37,11 +44,13 @@ import pitko.erik.homecontrol.fragments.AutomationFragment;
 import pitko.erik.homecontrol.fragments.GraphFragment;
 import pitko.erik.homecontrol.fragments.HomeFragment;
 import pitko.erik.homecontrol.fragments.RelayFragment;
+import pitko.erik.homecontrol.models.SensorShared;
 
 public class MainActivity extends AppCompatActivity {
     private static String uniqueID = null;
     private static String deviceName;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    private static final String PREF_SENSOR_SHARED = "PREF_SENSOR_SHARED";
     public static final String SERVER_HOST = "kosec-cloud.ddns.net";
     public static final String MOSQUITTO_BACKEND = "https://" + SERVER_HOST + "/api/v1/";
     public static final int MQTT_SSL_PORT = 8883;
@@ -49,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
     private ObservableMqttClient mqttClient;
     private static Activity act;
+    public static HashMap<String, SensorShared> sensorPrefs;
     /**
      * Disables multiple simultaneous connections to mqtt server
      */
@@ -150,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 mqtt.setUserName(obj.getJSONObject("username").getString("String"));
                 mqtt.setPassword(obj.getJSONObject("password").getString("String"));
                 homeFragment.parseSensors(obj.getJSONArray("sensors"));
+                graphFragment.parseSensors(homeFragment.getSensors());
                 mqttConnect();
                 //        Set home fragment
                 setFragment(homeFragment);
@@ -248,6 +259,30 @@ public class MainActivity extends AppCompatActivity {
         COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
     }
 
+    public synchronized static void setSensorPrefs(Context context, HashMap<String, SensorShared> sensorPrefs) {
+        Gson gson = new Gson();
+        String sensorPrefsStr;
+        SharedPreferences sharedPrefs = context.getSharedPreferences(
+                PREF_SENSOR_SHARED, Context.MODE_PRIVATE);
+
+        sensorPrefsStr = gson.toJson(sensorPrefs);
+        sharedPrefs.edit().putString(PREF_SENSOR_SHARED, sensorPrefsStr).apply();
+    }
+
+
+    public synchronized static HashMap<String, SensorShared> getSensorPrefs(Context context) {
+        Gson gson = new Gson();
+        String sensorPrefsStr;
+        SharedPreferences sharedPrefs = context.getSharedPreferences(
+                PREF_SENSOR_SHARED, Context.MODE_PRIVATE);
+        sensorPrefsStr = sharedPrefs.getString(PREF_SENSOR_SHARED, null);
+        if (sensorPrefsStr == null)
+            return new HashMap<String, SensorShared>();
+
+        java.lang.reflect.Type type = new TypeToken<HashMap<String, SensorShared>>(){}.getType();
+        return gson.fromJson(sensorPrefsStr, type);
+    }
+
     public synchronized static String id(Context context) {
         if (uniqueID == null) {
             SharedPreferences sharedPrefs = context.getSharedPreferences(
@@ -267,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uniqueID = id(this);
+        sensorPrefs = getSensorPrefs(this);
         deviceName = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
         if (deviceName == null) {
             deviceName = "Undefined";
@@ -288,6 +324,24 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("INSTANCE_ID", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d("INSTANCE_ID", msg);
+                    }
+                });
+
     }
 
     @Override
@@ -298,12 +352,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-//        mqttDisconnect();
         super.onPause();
+//        mqttDisconnect();
     }
 
     @Override
     protected void onDestroy() {
+        setSensorPrefs(this, sensorPrefs);
         if (mqttClient != null) {
             mqttDisconnect();
             mqttClient.close();

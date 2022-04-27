@@ -28,14 +28,15 @@ public class SensorStatusFragment extends Fragment {
             txtView.setText(text);
     }
 
-    public void setStatus(String text) {
+    public void setStatus(String text, Integer color) {
         this.status = text;
         if (statusTxtView != null) {
             if (postfix != null)
                 statusTxtView.setText(text + " " + postfix);
             else
                 statusTxtView.setText(text);
-
+            if (color != null)
+                statusTxtView.setTextColor(color);
         }
     }
 
@@ -48,7 +49,7 @@ public class SensorStatusFragment extends Fragment {
         txtView = (TextView) view.findViewById(R.id.textView);
         statusTxtView = (TextView) view.findViewById(R.id.statusS);
         setText(text);
-        setStatus(status);
+        setStatus(status, null);
         return view;
     }
 }

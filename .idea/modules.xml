@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Homecontrol.iml" filepath="$PROJECT_DIR$/Homecontrol.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.iml" />
     </modules>
   </component>
 </project>

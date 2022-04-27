@@ -3,10 +3,12 @@ package pitko.erik.homecontrol.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -29,7 +31,9 @@ import java.util.List;
 import java.util.Locale;
 
 import pitko.erik.homecontrol.R;
+import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.graphs.Graph;
+import pitko.erik.homecontrol.models.SensorShared;
 
 public class FragmentSingleGraph extends Fragment {
     private final Graph parent;
@@ -40,6 +44,8 @@ public class FragmentSingleGraph extends Fragment {
     private RadioGroup.OnCheckedChangeListener graphTimePeriodListener;
     private List<Long> dayLimitLines;
     private Graph.TimePeriod currentTimePeriod;
+    private View view;
+    private boolean chartVisible = true;
 
     public FragmentSingleGraph(Graph parent) {
         this.parent = parent;
@@ -80,6 +86,8 @@ public class FragmentSingleGraph extends Fragment {
     }
 
     public void addSeries(LineDataSet series) {
+        if (series == null)
+            return;
         series.setAxisDependency(YAxis.AxisDependency.LEFT);
         series.setColor(ColorTemplate.getHoloBlue());
         series.setValueTextColor(Color.BLUE);
@@ -146,15 +154,7 @@ public class FragmentSingleGraph extends Fragment {
         };
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_singlegraph,
-                container, false);
-        txtView = view.findViewById(R.id.textView);
-        RadioGroup graphTimePeriodGroup = view.findViewById(R.id.g_group);
-        graphTimePeriodGroup.setOnCheckedChangeListener(graphTimePeriodListener);
-
+    private void setChart(){
         chart = view.findViewById(R.id.graph);
         // no description text
         chart.getDescription().setEnabled(false);
@@ -194,6 +194,61 @@ public class FragmentSingleGraph extends Fragment {
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setXOffset(-0.3f);
         leftAxis.setYOffset(-5f);
+
+    }
+
+    public boolean isChartVisible() {
+        return chartVisible;
+    }
+
+    public void setChartVisible(boolean visible){
+        RelativeLayout relativeLayout = view.findViewById(R.id.relatLayout);
+        ViewGroup.LayoutParams params = relativeLayout.getLayoutParams();
+        if (visible) {
+            view.findViewById(R.id.graph).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.g_group).setVisibility(View.VISIBLE);
+
+            int px = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    220,
+                    getActivity().getResources().getDisplayMetrics()
+            );
+            params.height = px;
+        }else{
+            view.findViewById(R.id.graph).setVisibility(View.GONE);
+            view.findViewById(R.id.g_group).setVisibility(View.GONE);
+
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        SensorShared ss = MainActivity.sensorPrefs.getOrDefault(parent.getTopic(), new SensorShared(parent.getTopic()));
+        ss.setChartHidden(!visible);
+        MainActivity.sensorPrefs.put(parent.getTopic(), ss);
+        relativeLayout.setLayoutParams(params);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.view = inflater.inflate(R.layout.fragment_singlegraph,
+                container, false);
+        txtView = view.findViewById(R.id.textView);
+        RadioGroup graphTimePeriodGroup = view.findViewById(R.id.g_group);
+        graphTimePeriodGroup.setOnCheckedChangeListener(graphTimePeriodListener);
+        txtView.setOnClickListener((l) -> {
+            chartVisible = !chartVisible;
+            setChartVisible(chartVisible);
+            if (chartVisible){
+                parent.loadChartData(Graph.TimePeriod.DAY);
+                graphTimePeriodGroup.check(R.id.g_day);
+            }
+        });
+        setChart();
+
+        SensorShared sensorShared = MainActivity.sensorPrefs.get(parent.getTopic());
+        if (sensorShared != null && sensorShared.isChartHidden()){
+            chartVisible = false;
+        }
+        setChartVisible(chartVisible);
         setText(text);
         return view;
     }

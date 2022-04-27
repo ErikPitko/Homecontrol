@@ -43,6 +43,17 @@ public class Sensor {
         this.postfix = postfix;
     }
 
+    public static void destroyViews(){
+        sensorPlaceHolderMap.forEach((k, lay) -> {
+            lay.removeAllViews();
+        });
+        sensorPlaceHolderMap.clear();
+    }
+
+    public String getSensorText() {
+        return sensorText;
+    }
+
     public static void destroyPlaceHolderMap() {
         sensorPlaceHolderMap.clear();
     }
@@ -55,12 +66,12 @@ public class Sensor {
         return topic;
     }
 
-    public void setSensorStatus(String msg) {
+    public void setSensorStatus(String msg, Integer color) {
         this.sensorStatus = msg;
         if (sensorFragment != null) {
             Activity act;
             if ((act = sensorFragment.getActivity()) != null)
-                act.runOnUiThread(() -> sensorFragment.setStatus(msg));
+                act.runOnUiThread(() -> sensorFragment.setStatus(msg, color));
         }
     }
 
@@ -151,7 +162,7 @@ public class Sensor {
         }
         sensorFragment.setText(sensorLabel);
         sensorFragment.setPostfix(postfix);
-        act.runOnUiThread(() -> sensorFragment.setStatus(sensorStatus));
+        act.runOnUiThread(() -> sensorFragment.setStatus(sensorStatus, null));
     }
 
 }

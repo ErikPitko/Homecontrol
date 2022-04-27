@@ -70,4 +70,5 @@
 
     <!-- OTHER -->
     <string name="degrees_centigrade" translatable="false">°C</string>
+    <string name="msg_token_fmt">Token ID: %s</string>
 </resources>

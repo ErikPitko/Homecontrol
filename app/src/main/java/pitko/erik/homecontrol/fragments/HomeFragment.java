@@ -2,6 +2,7 @@ package pitko.erik.homecontrol.fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
@@ -30,20 +30,27 @@ import pitko.erik.homecontrol.sensors.TimeSensor;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    private List<Sensor> sensors;
+    private ArrayList<Sensor> sensors;
 
     public HomeFragment() {
         sensors = new ArrayList<>();
     }
 
+    public ArrayList<Sensor> getSensors() {
+        return sensors;
+    }
+
     public void parseSensors(JSONArray sensors) throws JSONException {
-        ArrayList<Sensor> sensorArrayList = new ArrayList<>();
+        if(!this.sensors.isEmpty()){
+            Sensor.destroyViews();
+            this.sensors.clear();
+        }
         JSONObject sensor;
         for (int i = 0; i < sensors.length(); i++) {
             sensor = sensors.getJSONObject(i);
             switch (sensor.getInt("type")) {
                 case 0:
-                    sensorArrayList.add(
+                    this.sensors.add(
                             new Sensor(
                                     sensor.getString("topic"),
                                     sensor.getString("label"),
@@ -51,7 +58,7 @@ public class HomeFragment extends Fragment {
                                     sensor.getString("postfix")));
                     break;
                 case 1:
-                    sensorArrayList.add(
+                    this.sensors.add(
                             new TimeSensor(
                                     sensor.getString("topic"),
                                     sensor.getString("label"),
@@ -61,7 +68,6 @@ public class HomeFragment extends Fragment {
 
             }
         }
-        this.sensors = sensorArrayList;
     }
 
     public void subscribeSensors() {
@@ -70,7 +76,7 @@ public class HomeFragment extends Fragment {
                 mqttClient.subscribe("sensor/#", 0).subscribe(msg -> {
                     for (Sensor sensor : sensors) {
                         if (sensor.getTopic().equals(msg.getTopic())) {
-                            sensor.setSensorStatus(new String(msg.getPayload()));
+                            sensor.setSensorStatus(new String(msg.getPayload()), null);
                         }
                     }
                 })

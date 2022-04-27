@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import pitko.erik.homecontrol.RestTask;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
+import pitko.erik.homecontrol.models.SensorShared;
 
 import static android.widget.RelativeLayout.BELOW;
 
@@ -39,6 +40,10 @@ public class Graph {
         this.topic = topic;
         this.title = title;
         this.layout = layout;
+    }
+
+    public String getTopic() {
+        return topic;
     }
 
     public String getLayout() {
@@ -77,6 +82,10 @@ public class Graph {
         transaction.replace(fl.getId(), singleGraph);
         transaction.commit();
 
+        SensorShared sensorShared = MainActivity.sensorPrefs.get(this.topic);
+        if (sensorShared != null && sensorShared.isChartHidden()){
+            return;
+        }
         loadChartData(TimePeriod.DAY);
     }
 
