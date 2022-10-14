@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Homecontrol.iml" filepath="$PROJECT_DIR$/Homecontrol.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Homecontrol.app.unitTest.iml" />
     </modules>
   </component>
 </project>

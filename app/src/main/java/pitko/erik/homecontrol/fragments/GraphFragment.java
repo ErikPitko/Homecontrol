@@ -51,6 +51,12 @@ public class GraphFragment extends Fragment {
                 case "cellar":
                     graph.draw(this, view.findViewById(R.id.graphCellar));
                     break;
+                case "tahanovce":
+                    graph.draw(this, view.findViewById(R.id.graphTahanovce));
+                    break;
+                default:
+                    graph.draw(this, view.findViewById(R.id.graphUnknown));
+                    view.findViewById(R.id.graphUnknownTextView).setVisibility(View.VISIBLE);
             }
         }
         return view;

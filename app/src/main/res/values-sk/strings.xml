@@ -9,6 +9,7 @@
     <string name="garden">Záhrada</string>
     <string name="cellar">Pivnica</string>
     <string name="attic">Podkrovie</string>
+    <string name="tahanovce">Ťahanovce</string>
     <string name="title_activity_automation_config">Konfigurácia</string>
     <string name="title_vent">Ventilácia</string>
     <string name="title_dryout">Odvlhčovanie</string>
@@ -66,4 +67,5 @@
     <string name="stat_disconn">Odpojené</string>
     <string name="stat_no_data">Žiadne data</string>
     <string name="stat_already_connected">Chyba: Viacnásobné pripojenie!</string>
+    <string name="unknown">Neznáme</string>
 </resources>

@@ -9,6 +9,7 @@
     <string name="garden">Garden</string>
     <string name="cellar">Cellar</string>
     <string name="attic">Attic</string>
+    <string name="tahanovce">Tahanovce</string>
     <string name="title_activity_automation_config">Configuration</string>
     <string name="title_vent">Ventilation</string>
     <string name="title_dryout">Dryout</string>
@@ -71,4 +72,5 @@
     <!-- OTHER -->
     <string name="degrees_centigrade" translatable="false">°C</string>
     <string name="msg_token_fmt">Token ID: %s</string>
+    <string name="unknown">Unknown</string>
 </resources>

@@ -73,6 +73,48 @@
 
         </RelativeLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="bottom"
+            android:padding="8dp"
+            android:text="@string/tahanovce"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/graphTahanovce"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/graphUnknownTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="bottom"
+            android:padding="8dp"
+            android:text="@string/unknown"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/graphUnknown"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </RelativeLayout>
+
     </LinearLayout>
 
 </ScrollView>
