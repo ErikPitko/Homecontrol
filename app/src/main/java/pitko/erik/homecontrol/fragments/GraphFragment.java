@@ -22,7 +22,7 @@ public class GraphFragment extends Fragment {
 //        sensorText must be defined in strings.xml
     }
 
-    public void parseSensors(ArrayList<Sensor> sensorList) {
+    public void parseSensors(List<Sensor> sensorList) {
         if(!this.graphs.isEmpty()){
             this.graphs.clear();
         }

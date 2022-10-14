@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,9 +45,7 @@ public class Sensor {
     }
 
     public static void destroyViews(){
-        sensorPlaceHolderMap.forEach((k, lay) -> {
-            lay.removeAllViews();
-        });
+        sensorPlaceHolderMap.forEach((k, lay) -> lay.removeAllViews());
         sensorPlaceHolderMap.clear();
     }
 
@@ -90,8 +89,8 @@ public class Sensor {
         TextView textView = new TextView(instance.getContext());
         textView.setText(layoutLabel);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
         );
         int px = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -113,8 +112,8 @@ public class Sensor {
 
         placeHolderLayout = new RelativeLayout(instance.getContext());
         placeHolderLayout.setLayoutParams(new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
         ));
         linearLayout.addView(textView);
         linearLayout.addView(placeHolderLayout);
@@ -139,8 +138,8 @@ public class Sensor {
 
         RelativeLayout fl = new RelativeLayout(context);
         RelativeLayout.LayoutParams flp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
         View lastView = placeHolderLayout.getChildAt(placeHolderLayout.getChildCount() - 1);
         if (lastView != null)

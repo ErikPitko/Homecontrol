@@ -115,9 +115,9 @@ public class FragmentSingleGraph extends Fragment {
 //            reset zoom
             this.chart.zoomToCenter(1 / this.chart.getScaleX(), 1 / this.chart.getScaleY());
             this.chart.setData(this.series);
+            this.chart.animateX(1000);
+            addLimitLines(this.chart.getXAxis(), "", R.color.transparentGray);
         }
-        chart.animateX(1000);
-        addLimitLines(chart.getXAxis(), "", R.color.transparentGray);
         this.dayLimitLines.clear();
     }
 
@@ -129,13 +129,13 @@ public class FragmentSingleGraph extends Fragment {
                 case R.id.g_week:
                     pattern = "E HH'h'";
 //                    set granularity for 1 hour
-                    this.chart.getXAxis().setGranularity(60 * 60 * 1000 + 1);
+                    this.chart.getXAxis().setGranularity(60.0f * 60 * 1000 + 1);
                     this.currentTimePeriod = Graph.TimePeriod.WEEK;
                     break;
                 case R.id.g_month:
                     pattern = "[w] E";
 //                    set granularity for 1 day
-                    this.chart.getXAxis().setGranularity(24 * 60 * 60 * 1000 + 1);
+                    this.chart.getXAxis().setGranularity(24.0f * 60 * 60 * 1000 + 1);
                     this.currentTimePeriod = Graph.TimePeriod.MONTH;
                     break;
                 default:
@@ -147,6 +147,7 @@ public class FragmentSingleGraph extends Fragment {
             chart.getXAxis().setValueFormatter(new ValueFormatter() {
                 private final SimpleDateFormat mFormat = new SimpleDateFormat(pattern, Locale.getDefault());
 
+                @Override
                 public String getFormattedValue(float value) {
                     return mFormat.format(new Date((long) value));
                 }
@@ -181,6 +182,7 @@ public class FragmentSingleGraph extends Fragment {
         xAxis.setValueFormatter(new ValueFormatter() {
             private final SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
 
+            @Override
             public String getFormattedValue(float value) {
                 return mFormat.format(new Date((long) value));
             }
@@ -234,7 +236,7 @@ public class FragmentSingleGraph extends Fragment {
         txtView = view.findViewById(R.id.textView);
         RadioGroup graphTimePeriodGroup = view.findViewById(R.id.g_group);
         graphTimePeriodGroup.setOnCheckedChangeListener(graphTimePeriodListener);
-        txtView.setOnClickListener((l) -> {
+        txtView.setOnClickListener(l -> {
             chartVisible = !chartVisible;
             setChartVisible(chartVisible);
             if (chartVisible){

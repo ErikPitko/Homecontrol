@@ -20,7 +20,7 @@ public class IMqtt {
     private ObservableMqttClient client;
     private String userName;
     private String password;
-    private final String serverURI = "ssl://" + MainActivity.SERVER_HOST + ":" + MainActivity.MQTT_SSL_PORT;
+    private static final String SERVER_URI = "ssl://" + MainActivity.SERVER_HOST + ":" + MainActivity.MQTT_SSL_PORT;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -32,7 +32,7 @@ public class IMqtt {
 
     public ObservableMqttClient buildClient() throws MqttException {
         MemoryPersistence dataStore = new MemoryPersistence();
-        final IMqttAsyncClient paho = new MqttAsyncClient(serverURI, MqttAsyncClient.generateClientId(), dataStore);
+        final IMqttAsyncClient paho = new MqttAsyncClient(SERVER_URI, MqttAsyncClient.generateClientId(), dataStore);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
         connectOptions.setUserName(userName);

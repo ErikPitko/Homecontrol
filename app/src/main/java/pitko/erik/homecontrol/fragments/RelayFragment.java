@@ -31,17 +31,17 @@ import pitko.erik.homecontrol.switches.RelayFactory;
  * A simple {@link Fragment} subclass.
  */
 public class RelayFragment extends Fragment {
-    private List<Relay> relays = new ArrayList<>();
-    private final String relayTopic = "node/cellar/relay";
+    private final List<Relay> relays = new ArrayList<>();
+    private static final String RELAY_TOPIC = "node/cellar/relay";
 
     public RelayFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Darling", relayTopic));
-        relays.add(rf.getRelay("EVd", relayTopic));
-        relays.add(rf.getRelay("Pump", relayTopic));
-        relays.add(rf.getRelay("Fan", relayTopic));
-        relays.add(rf.getRelay("Dryer", relayTopic));
-        relays.add(rf.getRelay("Boiler", relayTopic));
+        relays.add(rf.getRelay("Darling", RELAY_TOPIC));
+        relays.add(rf.getRelay("EVd", RELAY_TOPIC));
+        relays.add(rf.getRelay("Pump", RELAY_TOPIC));
+        relays.add(rf.getRelay("Fan", RELAY_TOPIC));
+        relays.add(rf.getRelay("Dryer", RELAY_TOPIC));
+        relays.add(rf.getRelay("Boiler", RELAY_TOPIC));
     }
 
     public void subscribeRelays() {

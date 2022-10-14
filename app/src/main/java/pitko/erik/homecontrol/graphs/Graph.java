@@ -2,6 +2,7 @@ package pitko.erik.homecontrol.graphs;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
@@ -63,8 +64,8 @@ public class Graph {
 
         RelativeLayout fl = new RelativeLayout(context);
         RelativeLayout.LayoutParams flp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
         View lastView = placeHolder.getChildAt(placeHolder.getChildCount() - 1);
         if (lastView != null)

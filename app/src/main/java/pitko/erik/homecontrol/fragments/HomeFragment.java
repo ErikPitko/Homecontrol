@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pitko.erik.homecontrol.IMqtt;
 import pitko.erik.homecontrol.R;
@@ -35,7 +36,7 @@ public class HomeFragment extends Fragment {
         sensors = new ArrayList<>();
     }
 
-    public ArrayList<Sensor> getSensors() {
+    public List<Sensor> getSensors() {
         return sensors;
     }
 
