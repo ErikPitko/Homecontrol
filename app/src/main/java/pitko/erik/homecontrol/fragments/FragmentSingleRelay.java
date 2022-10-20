@@ -59,8 +59,8 @@ public class FragmentSingleRelay extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_singlerelay,
                 container, false);
-        txtView = (TextView) view.findViewById(R.id.textView);
-        aSwitch = (SwitchCompat) view.findViewById(R.id.switchR);
+        txtView = view.findViewById(R.id.textView);
+        aSwitch = view.findViewById(R.id.switchR);
         aSwitch.setChecked(switchState);
         aSwitch.setOnCheckedChangeListener(listener);
         if (textListener != null)

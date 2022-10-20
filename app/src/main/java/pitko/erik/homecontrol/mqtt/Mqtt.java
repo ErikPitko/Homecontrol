@@ -1,4 +1,4 @@
-package pitko.erik.homecontrol;
+package pitko.erik.homecontrol.mqtt;
 
 import net.eusashead.iot.mqtt.ObservableMqttClient;
 import net.eusashead.iot.mqtt.paho.PahoObservableMqttClient;
@@ -9,18 +9,16 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import pitko.erik.homecontrol.activity.MainActivity;
-
 /**
  * Created by kosec on 15.2.18.
  */
 
-public class IMqtt {
-    private static IMqtt instance = null;
+public class Mqtt {
+    private static Mqtt instance = null;
     private ObservableMqttClient client;
     private String userName;
     private String password;
-    private static final String SERVER_URI = "ssl://" + MainActivity.SERVER_HOST + ":" + MainActivity.MQTT_SSL_PORT;
+    private static final String SERVER_URI = "ssl://" + MqttManager.SERVER_HOST + ":" + MqttManager.MQTT_SSL_PORT;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -48,16 +46,16 @@ public class IMqtt {
         return client;
     }
 
-    private IMqtt() {
+    private Mqtt() {
     }
 
     public ObservableMqttClient getClient() {
         return client;
     }
 
-    public static IMqtt getInstance() {
+    public static Mqtt getInstance() {
         if (instance == null)
-            instance = new IMqtt();
+            instance = new Mqtt();
         return instance;
     }
 

@@ -21,7 +21,7 @@ import net.eusashead.iot.mqtt.PublishMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.mqtt.Mqtt;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleRelay;
 
@@ -29,11 +29,11 @@ import static android.widget.RelativeLayout.BELOW;
 
 public class Relay implements OnCheckedChangeListener {
     @SerializedName("Relay")
-    private String relayName;
+    private final String relayName;
     @SerializedName("State")
     private boolean state;
 
-    private transient String topic;
+    private final transient String topic;
     private transient boolean notify_subs = false;
     private transient FragmentSingleRelay singleRelay;
     private transient static int relayCount = 1;
@@ -123,7 +123,7 @@ public class Relay implements OnCheckedChangeListener {
      */
     private void publish() {
         String msg;
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         if (!mqttClient.isConnected()) {
             pushToast("Client not connected");
             return;
@@ -145,11 +145,7 @@ public class Relay implements OnCheckedChangeListener {
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.isPressed()) {
-            if (b) {
-                this.setState(true);
-            } else {
-                this.setState(false);
-            }
+            this.setState(b);
             this.publish();
         }
     }

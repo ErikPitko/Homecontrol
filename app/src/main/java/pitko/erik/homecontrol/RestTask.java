@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class RestTask extends AsyncTask<String, Void, String> {
     public enum METHOD {GET, POST, PUT}
 
-    private METHOD method;
+    private final METHOD method;
     private Callback backgroundCallback;
     private Callback postExecuteCallback;
     private int readTimeout = 10000;
@@ -79,10 +79,7 @@ public class RestTask extends AsyncTask<String, Void, String> {
             conn.setReadTimeout(readTimeout);
             conn.setConnectTimeout(connectTimeout);
             //Connect to our url
-            if (jsonOut != null)
-                conn.setDoOutput(true);
-            else
-                conn.setDoOutput(false);
+            conn.setDoOutput(jsonOut != null);
             conn.connect();
 
             if (jsonOut != null) {

@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.mqtt.Mqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.AutomationConfig;
 import pitko.erik.homecontrol.activity.MainActivity;
@@ -33,18 +33,18 @@ import pitko.erik.homecontrol.switches.RelayFactory;
  * A simple {@link Fragment} subclass.
  */
 public class AutomationFragment extends Fragment {
-    private List<Relay> relays = new ArrayList<>();
+    private final List<Relay> relays = new ArrayList<>();
     private final String topic = "automation";
     private final String publishTopic = "node/cellar/automation";
 
     public AutomationFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Ventilation", publishTopic, AutomationConfig.CFG.VENTILATION));
-        relays.add(rf.getRelay("Dryout", publishTopic, AutomationConfig.CFG.DRYOUT));
+        relays.add(rf.getRelay("Ventilation", publishTopic, AutomationConfig.CFG.VENTILATION, getActivity()));
+        relays.add(rf.getRelay("Dryout", publishTopic, AutomationConfig.CFG.DRYOUT, getActivity()));
     }
 
     public void subscribeRelays() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe(this.topic, 1).subscribe(msg -> {
                     List<Relay> relays;
@@ -74,7 +74,7 @@ public class AutomationFragment extends Fragment {
 
     public void unsubscribeRelays() {
         ObservableMqttClient mqttClient;
-        mqttClient = IMqtt.getInstance().getClient();
+        mqttClient = Mqtt.getInstance().getClient();
         mqttClient.unsubscribe(this.topic).subscribe();
     }
 
@@ -86,7 +86,7 @@ public class AutomationFragment extends Fragment {
                 container, false);
 
         for (Relay relay : relays) {
-            relay.draw(this, (RelativeLayout) view.findViewById(R.id.automationLayout));
+            relay.draw(this, view.findViewById(R.id.automationLayout));
             relay.getSingleRelay().setSwitchListener(relay);
             relay.getSingleRelay().setTextListener((RelayAutomation) relay);
         }

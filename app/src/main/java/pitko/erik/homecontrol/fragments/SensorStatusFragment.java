@@ -46,8 +46,8 @@ public class SensorStatusFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sensor_status,
                 container, false);
-        txtView = (TextView) view.findViewById(R.id.textView);
-        statusTxtView = (TextView) view.findViewById(R.id.statusS);
+        txtView = view.findViewById(R.id.textView);
+        statusTxtView = view.findViewById(R.id.statusS);
         setText(text);
         setStatus(status, null);
         return view;

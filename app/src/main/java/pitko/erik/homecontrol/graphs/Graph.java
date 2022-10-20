@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import pitko.erik.homecontrol.mqtt.MqttManager;
 import pitko.erik.homecontrol.RestTask;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.fragments.FragmentSingleGraph;
@@ -27,7 +28,7 @@ import pitko.erik.homecontrol.models.SensorShared;
 import static android.widget.RelativeLayout.BELOW;
 
 public class Graph {
-    private static final String REST_HOST = "https://" + MainActivity.SERVER_HOST;
+    private static final String REST_HOST = "https://" + MqttManager.SERVER_HOST;
     private final String topic;
     private final String title;
     private final String layout;

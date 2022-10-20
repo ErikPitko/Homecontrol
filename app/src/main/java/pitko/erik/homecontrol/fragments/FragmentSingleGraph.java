@@ -3,6 +3,7 @@ package pitko.erik.homecontrol.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,7 @@ public class FragmentSingleGraph extends Fragment {
     private LineChart chart;
     private LineData series;
     private RadioGroup.OnCheckedChangeListener graphTimePeriodListener;
-    private List<Long> dayLimitLines;
+    private final List<Long> dayLimitLines;
     private Graph.TimePeriod currentTimePeriod;
     private View view;
     private boolean chartVisible = true;
@@ -103,6 +104,10 @@ public class FragmentSingleGraph extends Fragment {
 //        fill
         series.setHighLightColor(Color.rgb(244, 117, 117));
         series.setDrawFilled(true);
+        if (getContext() == null) {
+            Log.w("FragmentSingleGraph","Context lost");
+            return;
+        }
         Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
         series.setFillDrawable(drawable);
 

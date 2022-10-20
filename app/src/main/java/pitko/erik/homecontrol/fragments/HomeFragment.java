@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.mqtt.Mqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.sensors.Sensor;
@@ -30,7 +30,7 @@ import pitko.erik.homecontrol.sensors.TimeSensor;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    private ArrayList<Sensor> sensors;
+    private final ArrayList<Sensor> sensors;
 
     public HomeFragment() {
         sensors = new ArrayList<>();
@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
 
     public void parseSensors(JSONArray sensors) throws JSONException {
         if(!this.sensors.isEmpty()){
-            Sensor.destroyViews();
             this.sensors.clear();
         }
         JSONObject sensor;
@@ -71,7 +70,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void subscribeSensors() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe("sensor/#", 0).subscribe(msg -> {
                     for (Sensor sensor : sensors) {
@@ -84,7 +83,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void unsubscribeSensors() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.unsubscribe("sensor/#").subscribe()
         );
@@ -110,7 +109,7 @@ public class HomeFragment extends Fragment {
 
 //        Add sensor to its respective layout
         for (Sensor sensor : sensors) {
-            sensor.drawSensor(this, (LinearLayout) view.findViewById(R.id.sensorPlaceholder), getActivity());
+            sensor.drawSensor(this, view.findViewById(R.id.sensorPlaceholder), getActivity());
         }
     }
 }

@@ -12,20 +12,20 @@ import net.eusashead.iot.mqtt.PublishMessage;
 
 import java.util.ArrayList;
 
-import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.mqtt.Mqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.models.AutomationField;
 
 public class DryoutFragment extends Fragment implements View.OnClickListener {
-    private ArrayList<AutomationField> dryoutFieldList = new ArrayList<>();
+    private final ArrayList<AutomationField> dryoutFieldList = new ArrayList<>();
 
     public DryoutFragment() {
         // Required empty public constructor
     }
 
     public void subscribeFields() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe("node/cellar/#", 1).subscribe(msg -> {
                     for (AutomationField df : dryoutFieldList) {
@@ -40,7 +40,7 @@ public class DryoutFragment extends Fragment implements View.OnClickListener {
     }
 
     public void unsubscribeFields() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.unsubscribe("node/cellar/#").subscribe()
         );
@@ -70,7 +70,7 @@ public class DryoutFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         if (!mqttClient.isConnected()) {
             MainActivity.pushToast("Client not connected");
             return;

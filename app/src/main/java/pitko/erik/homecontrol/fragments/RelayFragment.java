@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.mqtt.Mqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.switches.Relay;
@@ -45,7 +45,7 @@ public class RelayFragment extends Fragment {
     }
 
     public void subscribeRelays() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe("relay", 1).subscribe(msg -> {
                     List<Relay> relays;
@@ -74,7 +74,7 @@ public class RelayFragment extends Fragment {
     }
 
     public void unsubscribeRelays() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         mqttClient.unsubscribe("relay").subscribe();
     }
 
@@ -86,7 +86,7 @@ public class RelayFragment extends Fragment {
                 container, false);
 
         for (Relay relay : relays) {
-            relay.draw(this, (RelativeLayout) view.findViewById(R.id.relayLayout));
+            relay.draw(this, view.findViewById(R.id.relayLayout));
             relay.getSingleRelay().setSwitchListener(relay);
         }
         return view;

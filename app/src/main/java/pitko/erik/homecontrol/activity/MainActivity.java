@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -14,32 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-import net.eusashead.iot.mqtt.ObservableMqttClient;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
-import pitko.erik.homecontrol.IMqtt;
+import lombok.Getter;
+import pitko.erik.homecontrol.LifeCycleObserver;
+import pitko.erik.homecontrol.mqtt.MqttManager;
 import pitko.erik.homecontrol.R;
-import pitko.erik.homecontrol.RestTask;
 import pitko.erik.homecontrol.fragments.AutomationFragment;
 import pitko.erik.homecontrol.fragments.GraphFragment;
 import pitko.erik.homecontrol.fragments.HomeFragment;
@@ -47,31 +36,30 @@ import pitko.erik.homecontrol.fragments.RelayFragment;
 import pitko.erik.homecontrol.models.SensorShared;
 
 public class MainActivity extends AppCompatActivity {
+    @Getter
     private static String uniqueID = null;
+    @Getter
     private static String deviceName;
+
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private static final String PREF_SENSOR_SHARED = "PREF_SENSOR_SHARED";
-    public static final String SERVER_HOST = "kosec-cloud.ddns.net";
-    public static final String MOSQUITTO_BACKEND = "https://" + SERVER_HOST + "/api/v1/";
-    public static final int MQTT_SSL_PORT = 8883;
 
     public static CompositeDisposable COMPOSITE_DISPOSABLE;
-    private ObservableMqttClient mqttClient;
     private static Activity act;
     public static HashMap<String, SensorShared> sensorPrefs;
-    /**
-     * Disables multiple simultaneous connections to mqtt server
-     */
-    private static final Semaphore connectionLock = new Semaphore(1);
 
     private BottomNavigationView navigation;
 
+    @Getter
     private HomeFragment homeFragment;
+    @Getter
     private RelayFragment relayFragment;
-    private AutomationFragment automationFragment;
+    @Getter
     private GraphFragment graphFragment;
+    @Getter
+    private AutomationFragment automationFragment;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -94,20 +82,16 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public static Activity getAct() {
-        return act;
-    }
-
-    private void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, fragment);
-        fragmentTransaction.commit();
-    }
-
     public static void pushToast(String msg) {
         if (act != null)
             act.runOnUiThread(() -> Toast.makeText(act.getApplicationContext(), msg,
                     Toast.LENGTH_SHORT).show());
+    }
+
+    public void setFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainFrame, fragment);
+        fragmentTransaction.commit();
     }
 
     /***
@@ -130,134 +114,7 @@ public class MainActivity extends AppCompatActivity {
         return res.getIdentifier(name, defType, act.getApplicationContext().getPackageName());
     }
 
-    private void registerNewDevice(RestTask restTask, String result) {
-        try {
-            int code = restTask.getConn().getResponseCode();
-            switch (code) {
-                case 202:
-                case 409:
-                    pushToast("Unauthorized");
-                    break;
-                case 400:
-                    pushToast("Invalid ID");
-                    break;
-                case 500:
-                default:
-                    pushToast("Authorization server error");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-    }
-
-    private void tryToGetCredentials(RestTask restTask, String result) {
-        try {
-            int responseCode = restTask.getConn().getResponseCode();
-            if (responseCode == 200 || responseCode == 404) {
-                IMqtt mqtt = IMqtt.getInstance();
-                JSONObject obj = new JSONObject(result);
-                mqtt.setUserName(obj.getJSONObject("username").getString("String"));
-                mqtt.setPassword(obj.getJSONObject("password").getString("String"));
-                homeFragment.parseSensors(obj.getJSONArray("sensors"));
-                graphFragment.parseSensors(homeFragment.getSensors());
-                mqttConnect();
-                //        Set home fragment
-                setFragment(homeFragment);
-            } else {
-                pushToast("Unauthorized");
-            }
-            return;
-        } catch (JSONException | IOException e) {
-            Log.w("REST", "Could not get credentials to MQTT broker");
-            e.printStackTrace();
-        }
-
-        try {
-            RestTask task = new RestTask(RestTask.METHOD.PUT);
-            task.setPostExecuteCallback(this::registerNewDevice);
-            JSONObject json = new JSONObject();
-            json.put("androidID", uniqueID);
-            json.put("name", deviceName);
-            task.setJsonOut(json);
-            task.execute(MOSQUITTO_BACKEND + "putAndroidID");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void authorizeAndConnectMqtt() {
-        if (mqttClient != null && mqttClient.isConnected()) {
-            Log.i("MQTT", getString(R.string.stat_already_connected));
-            mqttSubscribe();
-        } else {
-            RestTask task = new RestTask(RestTask.METHOD.GET);
-            task.setPostExecuteCallback(this::tryToGetCredentials);
-            task.execute(MOSQUITTO_BACKEND + "getCredentials?androidID=" + uniqueID);
-        }
-    }
-
-    /***
-     * Connect to the MQTT broker, function uses global variable COMPOSITE_DISPOSABLE
-     * in order to store RX callback function.
-     */
-    private void mqttConnect() {
-        try {
-            IMqtt mqtt = IMqtt.getInstance();
-            mqttClient = mqtt.buildClient();
-            ;
-            if (!connectionLock.tryAcquire(3, TimeUnit.SECONDS)) {
-                pushToast("Timeout");
-                return;
-            }
-            COMPOSITE_DISPOSABLE.add(
-                    mqttClient.connect().subscribe(() -> {
-                        connectionLock.release();
-                        pushToast(getString(R.string.stat_conn));
-                        mqttSubscribe();
-                    }, e -> {
-                        connectionLock.release();
-                        if (e.getCause() != null) {
-                            pushToast(e.getCause().getLocalizedMessage());
-                        } else {
-                            pushToast(getString(R.string.stat_err));
-                        }
-                    })
-            );
-        } catch (MqttException e) {
-            pushToast(e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void mqttSubscribe() {
-        if (!mqttClient.isConnected())
-            return;
-        homeFragment.subscribeSensors();
-        relayFragment.subscribeRelays();
-        automationFragment.subscribeRelays();
-    }
-
-    private void mqttUnsubscribe() {
-        if (!mqttClient.isConnected())
-            return;
-        homeFragment.unsubscribeSensors();
-        relayFragment.unsubscribeRelays();
-        automationFragment.unsubscribeRelays();
-    }
-
-    private void mqttDisconnect() {
-        if (!mqttClient.isConnected())
-            return;
-        try {
-            connectionLock.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        mqttUnsubscribe();
-        COMPOSITE_DISPOSABLE.add(mqttClient.disconnect().subscribe(connectionLock::release, e -> connectionLock.release()));
-    }
 
     public synchronized static void setSensorPrefs(Context context, HashMap<String, SensorShared> sensorPrefs) {
         Gson gson = new Gson();
@@ -283,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         return gson.fromJson(sensorPrefsStr, type);
     }
 
-    public synchronized static String id(Context context) {
+    private synchronized static String id(Context context) {
         if (uniqueID == null) {
             SharedPreferences sharedPrefs = context.getSharedPreferences(
                     PREF_UNIQUE_ID, Context.MODE_PRIVATE);
@@ -321,48 +178,16 @@ public class MainActivity extends AppCompatActivity {
         graphFragment = new GraphFragment();
 
 //        Create navigation menu
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("INSTANCE_ID", "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-
-                        // Log and toast
-                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d("INSTANCE_ID", msg);
-                    }
-                });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        authorizeAndConnectMqtt();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        mqttDisconnect();
+        MqttManager mqttManager = new MqttManager(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(new LifeCycleObserver(mqttManager));
     }
 
     @Override
     protected void onDestroy() {
         setSensorPrefs(this, sensorPrefs);
-        if (mqttClient != null) {
-            mqttDisconnect();
-            mqttClient.close();
-        }
         super.onDestroy();
     }
 }

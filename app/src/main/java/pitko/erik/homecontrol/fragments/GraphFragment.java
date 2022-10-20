@@ -16,7 +16,7 @@ import pitko.erik.homecontrol.sensors.Sensor;
 import pitko.erik.homecontrol.sensors.TimeSensor;
 
 public class GraphFragment extends Fragment {
-    private List<Graph> graphs = new ArrayList<>();
+    private final List<Graph> graphs = new ArrayList<>();
 
     public GraphFragment() {
 //        sensorText must be defined in strings.xml

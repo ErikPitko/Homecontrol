@@ -12,20 +12,20 @@ import net.eusashead.iot.mqtt.PublishMessage;
 
 import java.util.ArrayList;
 
-import pitko.erik.homecontrol.IMqtt;
+import pitko.erik.homecontrol.mqtt.Mqtt;
 import pitko.erik.homecontrol.R;
 import pitko.erik.homecontrol.activity.MainActivity;
 import pitko.erik.homecontrol.models.AutomationField;
 
 public class VentilationFragment extends Fragment implements View.OnClickListener {
-    private ArrayList<AutomationField> ventilationFieldList = new ArrayList<>();
+    private final ArrayList<AutomationField> ventilationFieldList = new ArrayList<>();
 
     public VentilationFragment() {
         // Required empty public constructor
     }
 
     public void subscribeFields() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.subscribe("node/cellar/#", 1).subscribe(msg -> {
                     for (AutomationField af : ventilationFieldList) {
@@ -40,7 +40,7 @@ public class VentilationFragment extends Fragment implements View.OnClickListene
     }
 
     public void unsubscribeFields() {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         MainActivity.COMPOSITE_DISPOSABLE.add(
                 mqttClient.unsubscribe("node/cellar/#").subscribe()
         );
@@ -72,7 +72,7 @@ public class VentilationFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        ObservableMqttClient mqttClient = IMqtt.getInstance().getClient();
+        ObservableMqttClient mqttClient = Mqtt.getInstance().getClient();
         if (!mqttClient.isConnected()) {
             MainActivity.pushToast("Client not connected");
             return;

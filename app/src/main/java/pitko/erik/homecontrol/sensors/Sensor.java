@@ -30,8 +30,8 @@ public class Sensor {
     protected String postfix;
     private SensorStatusFragment sensorFragment;
     private static int sensorCount = 1;
-    private String layout;
-    private static HashMap<String, RelativeLayout> sensorPlaceHolderMap = new HashMap<>();
+    private final String layout;
+    private static final HashMap<String, RelativeLayout> sensorPlaceHolderMap = new HashMap<>();
 
     public Sensor(String topic, String sensorText, String layout) {
         this.topic = topic;
@@ -42,11 +42,6 @@ public class Sensor {
     public Sensor(String topic, String sensorText, String layout, String postfix) {
         this(topic, sensorText, layout);
         this.postfix = postfix;
-    }
-
-    public static void destroyViews(){
-        sensorPlaceHolderMap.forEach((k, lay) -> lay.removeAllViews());
-        sensorPlaceHolderMap.clear();
     }
 
     public String getSensorText() {
