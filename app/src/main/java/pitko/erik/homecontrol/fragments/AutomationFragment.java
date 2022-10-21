@@ -39,8 +39,8 @@ public class AutomationFragment extends Fragment {
 
     public AutomationFragment() {
         RelayFactory rf = new RelayFactory();
-        relays.add(rf.getRelay("Ventilation", publishTopic, AutomationConfig.CFG.VENTILATION, getActivity()));
-        relays.add(rf.getRelay("Dryout", publishTopic, AutomationConfig.CFG.DRYOUT, getActivity()));
+        relays.add(rf.getRelay("Ventilation", publishTopic, AutomationConfig.CFG.VENTILATION));
+        relays.add(rf.getRelay("Dryout", publishTopic, AutomationConfig.CFG.DRYOUT));
     }
 
     public void subscribeRelays() {
@@ -88,7 +88,10 @@ public class AutomationFragment extends Fragment {
         for (Relay relay : relays) {
             relay.draw(this, view.findViewById(R.id.automationLayout));
             relay.getSingleRelay().setSwitchListener(relay);
-            relay.getSingleRelay().setTextListener((RelayAutomation) relay);
+            if (relay instanceof RelayAutomation) {
+                ((RelayAutomation) relay).setAct(getActivity());
+                relay.getSingleRelay().setTextListener((RelayAutomation) relay);
+            }
         }
         return view;
 
